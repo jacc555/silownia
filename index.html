@@ -35,9 +35,9 @@ details{background:var(--card);border:1px solid var(--ln);border-radius:16px;mar
 .ib{width:30px;height:30px;padding:0;border-radius:50%;flex:none;font:italic 700 16px Georgia,serif;line-height:1;background:transparent;border:1.5px solid var(--mu);color:#339af0}.ib.x{font:700 13px system-ui,sans-serif;color:#f03e3e}
 sup{font-size:.68em;color:var(--ac);font-weight:600;line-height:0;margin-left:1px}.chip.sm{padding:4px 11px;font-size:13px}
 .sw{display:flex;gap:10px;margin-top:10px}.sl{flex:1;min-width:0}.sl .set:first-child{margin-top:0}
-.vb{writing-mode:vertical-rl;transform:rotate(180deg);width:30px;padding:8px 0;border-radius:10px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;background:var(--bg);border:1px solid var(--ln);color:var(--mu);flex:none}.vb.on{background:var(--ok);border-color:var(--ok);color:#fff}
+.vb{writing-mode:vertical-rl;transform:rotate(180deg);width:30px;padding:8px 0;border-radius:10px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;background:var(--bg);border:1px solid var(--ln);color:var(--mu);flex:none}.vb.on{background:var(--ok);border-color:var(--ok);color:#fff}.ck2{display:inline-block;writing-mode:horizontal-tb;transform:rotate(180deg);position:relative;top:-7px;font-size:14px;line-height:1}
 .f{flex:1;min-width:0;display:flex;align-items:center;gap:4px;background:var(--bg);border:1px solid var(--ln);border-radius:12px;padding:0 10px}.f:focus-within{border-color:var(--ac)}
-.f input{border:0;background:transparent;width:100%;min-width:0;height:44px;padding:0;font-size:18px;font-weight:600;text-align:center}.f input:focus{outline:0}
+.f input{border:0;background:transparent;width:100%;min-width:0;height:34px;padding:0;font-size:18px;font-weight:600;text-align:center}.f input:focus{outline:0}
 .own{font-size:12px!important;height:36px;padding:0 10px!important;text-align:center;color:var(--mu)}
 .ex{margin-top:10px;padding-top:10px;border-top:1px solid var(--ln);align-items:center}.ex .a{grid-column:1/5}
 select{appearance:none;-webkit-appearance:none;padding-right:30px!important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23339af0' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center}
@@ -45,6 +45,15 @@ select{appearance:none;-webkit-appearance:none;padding-right:30px!important;back
 .tr>summary::after{content:"";flex:none;margin-left:auto;margin-right:4px;width:8px;height:8px;border-right:2px solid #339af0;border-bottom:2px solid #339af0;transform:translateY(-2px) rotate(45deg);transition:transform .2s}
 .tr[open]>summary::after{transform:translateY(2px) rotate(225deg)}
 #sd{scroll-margin-top:72px}
+.tg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:10px}
+.tt{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:6px;padding:11px 2px 8px;min-height:58px;border-radius:12px;background:var(--ln);color:var(--tx);text-align:center;line-height:1.15;min-width:0}
+.tt span{font-size:14px;font-weight:600;white-space:nowrap}
+.tt small{font-size:8.5px;color:var(--mu);font-weight:500;overflow-wrap:anywhere}
+.tt.on{background:var(--ac);color:#fff}.dot{position:absolute;top:6px;right:6px;width:6px;height:6px;border-radius:50%;background:var(--ac)}.tt.on .dot{background:#fff}.tt.on small{color:#fff;opacity:.92}
+.badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:99px;white-space:nowrap;flex:none}
+.badge.open{background:var(--ok);color:#fff}
+.badge.closed{background:var(--ln);color:var(--mu)}
+.badge.none{border:1px dashed var(--mu);color:var(--mu)}
 </style><link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#e8590c">
 <meta name="mobile-web-app-capable" content="yes">
@@ -178,12 +187,14 @@ Plecy|Podciąganie na drążku|Ciągnij łokcie w dół, broda nad drążek.
 Plecy|Wiosłowanie sztangą w opadzie|Plecy proste, ciągnij do pasa.
 Plecy|Wiosłowanie hantlem jednorącz|Ręka oparta o ławkę, ciągnij łokieć do biodra.
 Plecy|Pullover na wyciągu|Ramiona proste, ruch z barków do bioder.`.split('\n').forEach(l=>{let[g,n,t]=l.split('|');g=GM[g]||g;if(!LIB[g])LIB[g]=[];LIB[g].push(n);TIP[n]=t});
-const exs=e=>S.plan[vd].e.concat(e&&e.add||[]),nm=[],rg=n=>{let i=nm.indexOf(n);if(i<0)i=nm.push(n)-1;return i};
+const exs=e=>(S.plan[vd]?S.plan[vd].e:[]).concat(e&&e.add||[]),nm=[],rg=n=>{let i=nm.indexOf(n);if(i<0)i=nm.push(n)-1;return i};
 function addCard(){const gs=gall();return `<details style="margin:0 0 12px"><summary>＋ Dodaj ćwiczenie na partię</summary><div style="padding:0 14px 14px"><div class=mu style="margin-bottom:4px">Partia</div><select id=xg onchange="xf()">${gs.map(g=>`<option>${g}</option>`).join('')}</select><input id=xgn placeholder="…lub wpisz własną nazwę" class=own style="margin-top:8px"><div class=mu style="margin:8px 0 4px">Ćwiczenie z bazy</div><select id=xe>${(LIB[gs[0]]||[]).map(n=>`<option>${esc(n)}</option>`).join('')}</select><input id=xn placeholder="…lub wpisz własną nazwę" class=own style="margin-top:8px"><div class=row style="margin-top:8px"><input id=xs type=number value=3 style="width:64px"><span class=mu>serie ×</span><input id=xr type=number value=12 style="width:64px"><span class=mu>powt.</span><button class=pri style="margin-left:auto" onclick="xa()">Dodaj</button></div></div></details>`}
 const xf=()=>{$('#xe').innerHTML=(LIB[$('#xg').value]||[]).map(n=>`<option>${esc(n)}</option>`).join('')};
 const xa=()=>{const gn=$('#xgn').value.trim(),n=$('#xn').value.trim()||(gn?'':$('#xe').value),e=ent();if(!n||exs(e).some(x=>x.n==n))return;(e.add=e.add||[]).push({g:gn||$('#xg').value,n,s:+$('#xs').value||3,r:+$('#xr').value||12});save();render()};
 const rx=i=>{const e=ent(),k=i-S.plan[vd].e.length,x=e.add[k];delete e.ex[x.n];e.add.splice(k,1);save();render()};
-const alx=i=>{const a=mat(i),on=a.every(s=>s.ok);a.forEach(s=>s.ok=on?0:1);save();render()};
+const nextFrom=i=>{const e=S.log[today()],L=exs(e);for(let k=1;k<=L.length;k++){const j=(i+k)%L.length,x=L[j],ss=e&&e.ex[x.n]?e.ex[x.n].sets:def(x);if(!ss.every(t=>t.ok))return j}return -1};
+const pinEx=j=>{const el=document.getElementById('ex'+j);if(!el)return;setTimeout(()=>scrollTo({top:el.getBoundingClientRect().top+scrollY-66,behavior:'smooth'}),30)};
+const alx=i=>{const a=mat(i),on=a.every(s=>s.ok);a.forEach(s=>s.ok=on?0:1);save();render();if(!on){const j=nextFrom(i);if(j>=0)pinEx(j)}};
 function info(i){const n=nm[i],t=TIP[n]||'Kontroluj ruch, pełny zakres, spokojne opuszczanie (2–3 s).',im=S.img&&S.img[n],u=encodeURIComponent(n+' technika wykonania'),b='style="background:var(--ln);color:inherit;text-decoration:none;cursor:pointer"';
  $('#md').innerHTML=`<div><div class=row><b class=sp>${esc(n)}</b><button onclick="$('#md').style.display='none'">✕</button></div><p>${esc(t)}</p>${im?`<img src="${im}" style="width:100%;border-radius:10px" onclick="this.classList.toggle('zoom')">`:''}<div class=row style="margin-top:10px;justify-content:flex-end"><a class=chip ${b} target=_blank rel=noopener href="https://www.google.com/search?tbm=isch&q=${u}">🔎 Zdjęcia</a><a class=chip ${b} target=_blank rel=noopener href="https://www.youtube.com/results?search_query=${u}">▶ Wideo</a></div></div>`;$('#md').style.display='flex'}
 function pic(inp,i){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,720/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);(S.img=S.img||{})[nm[i]]=c.toDataURL('image/jpeg',.7);save();info(i)};im.src=r.result};r.readAsDataURL(f)}
@@ -198,7 +209,7 @@ const nf=n=>Math.round(n).toLocaleString('pl-PL'),N=()=>S.plan.length;
 const valid=e=>e&&(e.fin||Object.values(e.ex).some(x=>x.sets.some(s=>s.ok)));
 const vkeys=()=>Object.keys(S.log).filter(k=>valid(S.log[k])).sort();
 let chg=0,tab='t',vd=0,q=0,cm=new Date(),cs=null,per='m',sx='',rz=0;
-S.cur=S.cur%N();vd=S.cur;
+S.cur=N()?S.cur%N():0;vd=S.cur;
 const needQ=()=>{const t=today();return vkeys().length&&S.asked!==t&&!valid(S.log[t])};
 q=needQ()?(valid(S.log[yd()])?3:1):0;
 
@@ -206,12 +217,12 @@ const lastW=n=>{const k=Object.keys(S.log).sort().reverse();for(const d of k){co
 const lastS=n=>{const k=Object.keys(S.log).sort().reverse();for(const d of k){const x=S.log[d].ex[n];if(x&&x.sets.some(t=>+t.w>0))return x.sets}return null};
 const def=x=>{const L=lastS(x.n);return Array.from({length:x.s},(_,i)=>{const p=L&&(L[i]||L[L.length-1]);return{w:p?p.w:'',r:p&&p.r?p.r:x.r,ok:0}})};
 const full=d=>{const ex={};S.plan[d].e.forEach(x=>{ex[x.n]={g:x.g,sets:Array.from({length:x.s},()=>({w:0,r:x.r,ok:1}))}});return{d,fin:1,ex}};
-const ent=()=>{const t=today();return S.log[t]||(S.log[t]={d:vd,fin:0,ex:{}})};
+const ent=()=>{const t=today();return S.log[t]||(S.log[t]={d:vd,fin:0,ex:{},st:Date.now()})};
 function mat(i){const e=ent(),x=exs(e)[i];if(!e.ex[x.n])e.ex[x.n]={g:x.g,sets:def(x)};return e.ex[x.n].sets}
 const sv=(i,j,f,v)=>{mat(i)[j][f]=v;save()};
 const ck=(i,j)=>{const s=mat(i)[j];s.ok=s.ok?0:1;save();render()};
 const ns=(i,d)=>{const a=mat(i);if(d>0)a.push({...a[a.length-1],ok:0});else if(a.length>1)a.pop();save();render()};
-const fin=()=>{const e=ent();if(!e.fin){e.fin=1;S.cur=(e.d+1)%N()}save();render()};
+const fin=()=>{const e=ent();if(!e.fin){e.fin=1;e.en=Date.now();S.cur=(e.d+1)%N()}save();render()};
 const undo=()=>{const t=today(),e=S.log[t];if(e&&e.fin)S.cur=e.d;delete S.log[t];vd=S.cur;save();render()};
 const q1=y=>{if(y){S.log[yd()]=full(S.cur);q=2}else{S.asked=today();q=0}save();render()};
 const q2=y=>{if(y){S.cur=(S.cur+1)%N();vd=S.cur}S.asked=today();q=0;save();render()};
@@ -220,7 +231,7 @@ const mk=(k,d)=>{const l=vkeys().pop()||'';S.log[k]=full(d);if(k>=l)S.cur=(d+1)%
 const del=k=>{delete S.log[k];save();render()};
 const cmv=d=>{cm=new Date(cm.getFullYear(),cm.getMonth()+d,1);render()};
 
-function vToday(){
+function vToday(){if(!N())return '<div class=card><b>Brak treningów</b><div class=mu style="margin-top:6px">Dodaj trening w „Ustawienia i edycja planu” albo zaimportuj kopię danych.</div><button class=pri style="margin-top:10px" onclick="$(\'#sd\').open=true;scrollTo({top:document.body.scrollHeight,behavior:\'smooth\'})">Otwórz Ustawienia</button></div>';
  const e=S.log[today()];if(e)vd=e.d;if(vd>=N())vd=0;const P=S.plan[vd];let h='';
  if(q==1)h+=`<div class=card style="border-color:var(--ac)"><b>Czy wczoraj był trening: Trening ${S.cur+1} – ${esc(S.plan[S.cur].n)}?</b><div class=row style="margin-top:10px"><button class=pri onclick="q1(1)">Tak</button><button onclick="q1(0)">Nie</button></div></div>`;
  if(q==2)h+=`<div class=card style="border-color:var(--ac)"><div class=mu>✓ Wczorajszy trening zapisany w kalendarzu</div><b>Czy przejść do kolejnego treningu (Trening ${(S.cur+1)%N()+1})?</b><div class=row style="margin-top:10px"><button class=pri onclick="q2(1)">Tak</button><button onclick="q2(0)">Nie</button></div></div>`;
@@ -229,10 +240,10 @@ function vToday(){
  let tot=0,dn=0;exs(e).forEach(x=>{const a=e&&e.ex[x.n]?e.ex[x.n].sets:def(x);tot+=a.length;dn+=a.filter(s=>s.ok).length});
  h+=`<div class=card><div class=mu>${new Date().toLocaleDateString('pl-PL',{weekday:'long',day:'numeric',month:'long'})}</div><div class=h1 style="color:${dc(vd)}">Trening ${vd+1}</div><div style="font-size:17px;font-weight:600;color:var(--mu);margin-top:2px">${esc(P.n)}</div>`;
  if(!e&&!chg)h+=`<div style="margin-top:8px"><button onclick="chg=1;render()">Zmień trening</button></div>`;
- if(!e&&chg)h+=`<div class=row style="margin-top:10px">${S.plan.map((p,i)=>`<button class="chip ${i==vd?'on':''}" onclick="vd=${i};chg=0;render()">T${i+1}${i==S.cur?' •':''}</button>`).join('')}</div>`;
+ if(!e&&chg)h+=`<div class=tg>${S.plan.map((p,i)=>`<button class="tt ${i==vd?'on':''}" onclick="vd=${i};chg=0;render()"><span>Trening ${i+1}</span>${i==S.cur?'<i class=dot></i>':''}<small>${esc(p.n)}</small></button>`).join('')}</div>`;
  h+=`<div class=bar><div style="width:${tot?dn/tot*100:0}%"></div></div><div class=mu>${dn}/${tot} serii</div></div>`;
  exs(e).forEach((x,i)=>{const ss=e&&e.ex[x.n]?e.ex[x.n].sets:def(x),al=ss.every(s=>s.ok),fs=x.n.length>38?13:x.n.length>28?14.5:16;
-  h+=`<div class=card style="border-left:4px solid ${gc(x.g)}"><div class=eh><div class=en><div class=eg style="color:${gc(x.g)}">${esc(x.g)}</div><b style="font-size:${fs}px">${esc(x.n)}</b><div class=mu>plan ${x.s}×${x.r}</div></div><button class=ib title="Jak wykonać" onclick="info(rg(${JSON.stringify(x.n).replace(/"/g,'&quot;')}))">i</button>${i>=P.e.length?`<button class="ib x" title="Usuń ćwiczenie" onclick="rx(${i})">✕</button>`:''}</div><div class=sw><button class="vb ${al?'on':''}" onclick="alx(${i})">${al?'✓ ':''}wszystkie</button><div class=sl>`;
+  h+=`<div class=card id=ex${i} style="border-left:4px solid ${gc(x.g)}"><div class=eh><div class=en><div class=eg style="color:${gc(x.g)}">${esc(x.g)}</div><b style="font-size:${fs}px">${esc(x.n)}</b><div class=mu>plan ${x.s}×${x.r}</div></div><button class=ib title="Jak wykonać" onclick="info(rg(${JSON.stringify(x.n).replace(/"/g,'&quot;')}))">i</button>${i>=P.e.length?`<button class="ib x" title="Usuń ćwiczenie" onclick="rx(${i})">✕</button>`:''}</div><div class=sw><button class="vb ${al?'on':''}" onclick="alx(${i})">${al?'<span class=ck2>✓</span>':''}wszystkie</button><div class=sl>`;
   ss.forEach((s,j)=>h+=`<div class="set ${s.ok?'ok':''}"><b>${j+1}</b><label class=f><input type=number inputmode=decimal step=.5 placeholder=0 value="${s.w||''}" oninput="sv(${i},${j},'w',this.value)"><i>kg</i></label><label class=f><input type=number inputmode=numeric placeholder=0 value="${s.r}" oninput="sv(${i},${j},'r',this.value)"><i>powt.</i></label><button class=ck onclick="ck(${i},${j})">✓</button></div>`);
   h+='</div></div></div>'});
  h+=addCard();h+=`<button class="pri big" onclick="fin()">${e&&e.fin?'Trening zakończony ✓ (zapisz zmiany)':'Zakończ trening'}</button>`;
@@ -246,12 +257,12 @@ function vCal(){
   c+=`<button class="day ${k==today()?'td':''} ${k==cs?'sel':''}" ${v?`style="background:${dc(e.d)};color:#fff"`:''} onclick="cs='${k}';render()">${d}${v?`<i>T${e.d+1}</i>`:''}</button>`}
  let h=`<div class=card><div class=row><button onclick="cmv(-1)">‹</button><div class=sp style="text-align:center"><b>${MN[m]} ${y}</b><div class=mu>Treningów w miesiącu: ${cnt}</div></div><button onclick="cmv(1)">›</button></div><div class=cal>${['Pn','Wt','Śr','Cz','Pt','So','Nd'].map(d=>`<i class=hd>${d}</i>`).join('')}${c}</div></div>`;
  if(cs){const e=S.log[cs];h+=`<div class=card><b style="display:block;text-align:center;color:var(--ac);font-size:16px;margin-bottom:14px;text-transform:capitalize">${pd(cs).toLocaleDateString('pl-PL',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</b>`;
-  if(valid(e)){h+=`<div class=mu>Trening ${e.d+1}${S.plan[e.d]?' · '+esc(S.plan[e.d].n):''}</div>`;
+  if(valid(e)){h+=`<div class=mu>Trening ${e.d+1}${S.plan[e.d]?' · '+esc(S.plan[e.d].n):''}</div>`;if(e.st)h+=`<div class=mu style="margin-top:2px">${hm(e.st)}${e.en?' – '+hm(e.en)+' · '+Math.max(1,Math.round((e.en-e.st)/6e4))+' min':' (trwa / nie zakończony)'}</div>`;
    for(const[n,x]of Object.entries(e.ex)){const o=x.sets.filter(s=>s.ok);if(o.length)h+=`<div class=ln><span style="color:${gc(x.g)}">●</span> <b>${esc(n)}</b><div class=mu>${o.map(s=>s.r+(+s.w?`<sup>${s.w}</sup>`:'')).join(' · ')}</div></div>`}
    h+=`<div style="margin-top:10px"><button onclick="del('${cs}')">Usuń trening</button></div>`}
-  else if(cs<=today())h+=`<div class=mu style="margin:6px 0">Brak treningu. Oznacz jako wykonany:</div><div class=row>${S.plan.map((p,i)=>`<button class=chip style="background:${dc(i)};color:#fff" onclick="mk('${cs}',${i})">T${i+1}</button>`).join('')}</div>`;
+  else if(cs<=today())h+=`<div class=mu style="margin:6px 0">${S.plan.length?'Brak treningu. Oznacz jako wykonany:':'Brak treningu. Najpierw dodaj trening w Ustawieniach.'}</div><div class=tg>${S.plan.map((p,i)=>`<button class=tt onclick="mk('${cs}',${i})"><span>Trening ${i+1}</span><small>${esc(p.n)}</small></button>`).join('')}</div>`;
   else h+='<div class=mu>Przyszły dzień.</div>';
-  h+='</div>'}
+  h+='</div>';h+=gymCard()}
  return h}
 
 function agg(from){const r={t:0,s:0,rep:0,vol:0,g:{}};
@@ -265,6 +276,14 @@ function line(p){if(p.length<2)return '<div class=mu>Za mało danych – potrzeb
  const mx=Math.max(...p.map(a=>a.v)),mn=Math.min(...p.map(a=>a.v)),rg=mx-mn||1,X=i=>20+i*280/(p.length-1),Y=v=>95-(v-mn)/rg*65;
  return `<svg viewBox="0 0 320 120" width="100%"><polyline fill="none" stroke="var(--ac)" stroke-width="2.5" points="${p.map((a,i)=>X(i)+','+Y(a.v)).join(' ')}"/>${p.map((a,i)=>`<circle cx="${X(i)}" cy="${Y(a.v)}" r="3.5" fill="var(--ac)"/>`).join('')}<text x="20" y="14" font-size="11" fill="var(--tx)">maks. ${mx} kg</text><text x="20" y="116" font-size="10" fill="var(--mu)">${p[0].l}</text><text x="300" y="116" text-anchor="end" font-size="10" fill="var(--mu)">${p[p.length-1].l}</text></svg>`}
 
+
+const hm=t=>new Date(t).toLocaleTimeString('pl-PL',{hour:'2-digit',minute:'2-digit'});
+const hmin=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(Math.round(m%60)).padStart(2,'0');
+function tAgg(from){const r={n:0,min:0,sm:0,hrs:Array(6).fill(0),list:[]};
+ for(const[dt,e]of Object.entries(S.log)){if(dt<from||!valid(e)||!e.st||!e.en)continue;const m=Math.round((e.en-e.st)/6e4);if(m<=0||m>720)continue;
+  const d=new Date(e.st),sm=d.getHours()*60+d.getMinutes();r.n++;r.min+=m;r.sm+=sm;r.hrs[Math.min(5,Math.max(0,Math.floor((d.getHours()-5)/3)))]++;r.list.push({dt,st:e.st,en:e.en,m})}
+ r.list.sort((a,b)=>b.dt.localeCompare(a.dt));return r}
+function hbars(v,l){const mx=Math.max(1,...v);return `<svg viewBox="0 0 320 120" width="100%">${v.map((n,i)=>{const h=n/mx*70,x=i*53+8;return `<rect x="${x}" y="${90-h}" width="36" height="${h}" rx="5" fill="var(--ac)" opacity="${n?1:.25}"/><text x="${x+18}" y="${84-h}" text-anchor="middle" font-size="11" fill="var(--tx)">${n||''}</text><text x="${x+18}" y="110" text-anchor="middle" font-size="10" fill="var(--mu)">${l[i]}</text>`}).join('')}</svg>`}
 function vStats(){
  const now=new Date(),wk=new Date(now.getFullYear(),now.getMonth(),now.getDate());wk.setDate(wk.getDate()-((now.getDay()+6)%7));
  const F={w:ymd(wk),m:ymd(new Date(now.getFullYear(),now.getMonth(),1)),y:now.getFullYear()+'-01-01',a:'0'},A={};for(const k in F)A[k]=agg(F[k]);
@@ -273,7 +292,18 @@ function vStats(){
  h+=`<div class=card><b>Partie mięśniowe</b><div class=row style="margin:8px 0">${[['w','Tydzień'],['m','Miesiąc'],['y','Rok'],['a','Razem']].map(([k,l])=>`<button class="chip ${per==k?'on':''}" onclick="per='${k}';render()">${l}</button>`).join('')}</div>`;
  h+=gk.length?gk.map(g=>`<div style="margin-bottom:10px"><div class=row><b style="color:${gc(g)}">${esc(g)}</b><span class=sp></span><span class=mu>${G[g].t} trening. · ${G[g].s} serii · ${nf(G[g].rep)} powt. · ${nf(G[g].vol)} kg</span></div><div class=bar><div style="width:${G[g].s/gm*100}%;background:${gc(g)}"></div></div></div>`).join(''):'<div class=mu>Brak danych w tym okresie.</div>';
  h+='</div>';
- const W=Array(12).fill(0),Wt=Array(12).fill(0);
+ const TP={w:tAgg(F.w),m:tAgg(F.m),y:tAgg(F.y),a:tAgg(F.a)},T=TP[per],PN={w:'tydzień',m:'miesiąc',y:'rok',a:'razem'};
+ const tc=k=>TP[k].n?hmin(TP[k].min/TP[k].n):'–',tt=k=>TP[k].n?(TP[k].min/60).toFixed(1)+' h':'–',tn=k=>TP[k].n;
+ h+=`<div class=card><b>Czas i godziny treningu</b>
+ <table class=tb><tr><th></th><th>Tydz.</th><th>Mies.</th><th>Rok</th><th>Razem</th></tr>
+ <tr><td>Treningów z czasem</td>${['w','m','y','a'].map(k=>`<td>${tn(k)}</td>`).join('')}</tr>
+ <tr><td>Średni czas</td>${['w','m','y','a'].map(k=>`<td>${TP[k].n?Math.round(TP[k].min/TP[k].n)+' min':'–'}</td>`).join('')}</tr>
+ <tr><td>Łącznie</td>${['w','m','y','a'].map(k=>`<td>${tt(k)}</td>`).join('')}</tr></table>
+ <div class=mu style="margin:12px 0 2px">Godziny rozpoczęcia – ${PN[per]} ${T.n?'· średnio '+hmin(T.sm/T.n):''}</div>
+ ${T.n?hbars(T.hrs,['5–8','8–11','11–14','14–17','17–20','20–23']):'<div class=mu>Brak treningów z zapisanym czasem.</div>'}
+ ${T.list.length?`<div style="margin-top:10px"><b>Ostatnie treningi</b>${T.list.slice(0,8).map(x=>`<div class=ln><span class=mu>${pd(x.dt).toLocaleDateString('pl-PL',{day:'numeric',month:'short'})}</span> · ${hm(x.st)}–${hm(x.en)} · <b>${x.m} min</b></div>`).join('')}</div>`:''}
+ </div>`;
+const W=Array(12).fill(0),Wt=Array(12).fill(0);
  for(const[k,e]of Object.entries(S.log)){if(!valid(e))continue;const dd=Math.round((wk-pd(k))/864e5),a=dd<=0?0:Math.ceil(dd/7);if(a>11)continue;Wt[a]++;Object.values(e.ex).forEach(x=>W[a]+=x.sets.filter(s=>s.ok).length)}
  h+=`<div class=card><b>Serie w tygodniach</b><div class=mu>Średnio ${(Wt.reduce((a,b)=>a+b,0)/12).toFixed(1)} treningu / tydzień (ostatnie 12 tyg.)</div>${bars(W.slice().reverse())}</div>`;
  const names=[...new Set(Object.values(S.log).flatMap(e=>Object.entries(e.ex).filter(([n,x])=>x.sets.some(s=>s.ok&&+s.w>0)).map(([n])=>n)))];
@@ -292,18 +322,30 @@ function render(){
 const sv2=()=>{save();render()};
 const go=k=>{tab=k;$('#sd').open=false;render();scrollTo({top:0,behavior:'smooth'})};
 let DL=null;(async()=>{try{const c=window.claude;DL=c?await c.use('downloads'):null}catch(e){DL=null}})();
-async function exp(){const txt=JSON.stringify(S,null,2),fn='silownia-dane-'+today()+'.json',blob=new Blob([txt],{type:'application/json'});
+function statsExport(){
+ const now=new Date(),wk=new Date(now.getFullYear(),now.getMonth(),now.getDate());wk.setDate(wk.getDate()-((now.getDay()+6)%7));
+ const F={w:ymd(wk),m:ymd(new Date(now.getFullYear(),now.getMonth(),1)),y:now.getFullYear()+'-01-01',a:'0'},NM={w:'tydzien',m:'miesiac',y:'rok',a:'razem'},okr={};
+ for(const k of ['w','m','y','a']){const A=agg(F[k]),T=tAgg(F[k]),gr={};
+  for(const[g,v]of Object.entries(A.g))gr[g]={treningi:v.t,serie:v.s,powtorzenia:v.rep,tonaz_kg:Math.round(v.vol)};
+  okr[NM[k]]={treningi:A.t,serie:A.s,powtorzenia:A.rep,tonaz_kg:Math.round(A.vol),treningi_z_czasem:T.n,sredni_czas_min:T.n?Math.round(T.min/T.n):null,lacznie_godzin:+(T.min/60).toFixed(1),partie:gr}}
+ const rec={};
+ for(const[dt,e]of Object.entries(S.log)){if(!valid(e))continue;for(const[n,x]of Object.entries(e.ex))x.sets.forEach(t=>{const w=+t.w||0;if(t.ok&&w>0){const r=rec[n]||(rec[n]={rekord_kg:0,data:''});if(w>r.rekord_kg){r.rekord_kg=w;r.data=dt}}})}
+ return{data_eksportu:now.toLocaleString('pl-PL'),okresy:okr,rekordy:rec}}
+async function exp(){let txt;try{txt=JSON.stringify(Object.assign({},S,{statystyki:statsExport()}),null,2)}catch(e){txt=JSON.stringify(S,null,2)}const fn='silownia-dane-'+today()+'.json',blob=new Blob([txt],{type:'application/json'});
  if(window.showSaveFilePicker){try{const h=await showSaveFilePicker({suggestedName:fn,types:[{description:'Kopia treningów',accept:{'application/json':['.json']}}]});const w=await h.createWritable();await w.write(blob);await w.close();return}catch(e){if(e&&e.name==='AbortError')return}}
  const file=new File([blob],fn,{type:'application/json'});
  if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:fn});return}catch(e){if(e&&e.name==='AbortError')return}}
  if(DL){try{await DL.save({filename:fn,data:txt});return}catch(e){}}
  try{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fn;document.body.appendChild(a);a.click();a.remove()}catch(e){alert('Nie udało się zapisać pliku.')}}
-async function imp(inp){const f=inp.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(!d||!Array.isArray(d.plan))throw 0;S=d;save();location.reload()}catch(e){alert('Nieprawidłowy plik kopii.')}inp.value=''}
+async function imp(inp){const f=inp.files[0];inp.value='';if(!f)return;let d;try{d=JSON.parse(await f.text());if(!d||!Array.isArray(d.plan))throw 0}catch(e){alert('Nieprawidłowy plik kopii.');return}
+ delete d.statystyki;let n=0;try{n=Object.keys(d.log||{}).filter(k=>valid(d.log[k])).length}catch(e){}
+ try{localStorage.setItem(K,JSON.stringify(d))}catch(e){alert('Nie udało się zapisać danych w przeglądarce (za mało miejsca).');return}
+ alert('Zaimportowano: '+d.plan.length+' treningów w planie, '+n+' dni z zapisanym treningiem.');location.reload()}
 const ed=(d,i,f,v)=>{S.plan[d].e[i][f]=(f=='s'||f=='r')?Math.max(1,+v||1):v;sv2()};
 const ae=d=>{const l=S.plan[d].e;l.push({g:l.length?l[l.length-1].g:'Partia',n:'Nowe ćwiczenie',s:4,r:10});save();rs();render()};
 const de=(d,i)=>{S.plan[d].e.splice(i,1);save();rs();render()};
 const ad=()=>{S.plan.push({n:'Nowy trening',e:[]});save();rs();render()};
-const dd=d=>{if(N()<2)return;OP={};S.plan.splice(d,1);S.cur=S.cur%N();vd=S.cur;save();rs();render()};
+const dd=d=>{if(N()<2)return;OP={};S.plan.splice(d,1);S.cur=N()?S.cur%N():0;vd=S.cur;save();rs();render()};
 const gall=()=>[...new Set([...Object.keys(LIB),...S.plan.flatMap(p=>p.e.map(x=>x.g)),'Inne'])].filter(Boolean);
 const gopts=c=>gall().map(g=>`<option ${g==c?'selected':''}>${esc(g)}</option>`).join('');
 const eopts=(g,c)=>{const l=(LIB[g]||[]).slice();if(c&&!l.includes(c))l.unshift(c);return l.map(n=>`<option ${n==c?'selected':''}>${esc(n)}</option>`).join('')};
@@ -313,13 +355,14 @@ const pf=d=>{$('#pe'+d).innerHTML=eopts($('#pg'+d).value,'')};
 const pa=d=>{const gn=$('#pgn'+d).value.trim(),n=$('#pn'+d).value.trim()||(gn?'':$('#pe'+d).value);if(!n)return;S.plan[d].e.push({g:gn||$('#pg'+d).value,n,s:+$('#ps'+d).value||4,r:+$('#pr'+d).value||10});save();rs();render()};
 const addForm=d=>`<details style="margin-top:12px;background:var(--bg)"><summary>＋ Dodaj ćwiczenie do tego treningu</summary><div style="padding:0 14px 14px"><div class=mu style="margin-bottom:4px">Partia</div><select id=pg${d} onchange="pf(${d})">${gopts('')}</select><input id=pgn${d} placeholder="…lub wpisz własną nazwę" class=own style="margin-top:8px"><div class=mu style="margin:8px 0 4px">Ćwiczenie z bazy</div><select id=pe${d}>${eopts(gall()[0],'')}</select><input id=pn${d} placeholder="…lub wpisz własną nazwę" class=own style="margin-top:8px"><div class=row style="margin-top:8px"><input id=ps${d} type=number value=4 style="width:64px"><span class=mu>serie ×</span><input id=pr${d} type=number value=10 style="width:64px"><span class=mu>powt.</span><button class=pri style="margin-left:auto" onclick="pa(${d})">Dodaj</button></div></div></details>`;
 let OP={};
+const dinfo=()=>{try{const pl=S.plan.reduce((a,p)=>a+p.e.length,0),dn=Object.keys(S.log).filter(k=>valid(S.log[k])).length;return `W aplikacji: ${S.plan.length} treningów · ${pl} ćwiczeń w planie · ${dn} dni z treningiem · ${S.gyms.length} siłowni`}catch(e){return ''}};
 function rs(){
  const gs=[...new Set(S.plan.flatMap(p=>p.e.map(x=>x.g)))];
  let h=`<datalist id=gl>${gs.map(g=>`<option value="${esc(g)}">`).join('')}</datalist><div class=mu style="margin-bottom:8px">Cykl: ${N()} dni, po ostatnim wraca na Trening 1. Aktualny następny trening: Trening ${S.cur+1}.</div><div class=mu style="margin-bottom:6px">Następny w cyklu:</div><div class=row style="margin-bottom:12px;gap:6px">${S.plan.map((p,i)=>`<button class="chip sm ${i==S.cur?'on':''}" onclick="S.cur=${i};vd=${i};save();rs();render()">Trening ${i+1}</button>`).join('')}</div>`;
  S.plan.forEach((p,d)=>{h+=`<details class=tr ${OP[d]?'open':''} ontoggle="OP[${d}]=this.open" style="margin:0 0 12px;padding:0"><summary style="padding:14px;font-weight:700;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap"><span style="color:${dc(d)}">Trening ${d+1}</span><span class=mu style="font-weight:500;font-size:14px">${esc(p.n)}</span></summary><div style="padding:0 14px 14px"><div class=row style="margin-bottom:4px"><input style="flex:1" value="${esc(p.n)}" onchange="S.plan[${d}].n=this.value;save();rs();render()"><button onclick="dd(${d})">Usuń</button></div>`;
   p.e.forEach((x,i)=>h+=`<div class=ex><select class=a onchange="eg(${d},${i},this.value)">${gopts(x.g)}</select><input class="a own" placeholder="…lub wpisz własną nazwę" class=own onchange="if(this.value.trim())eg(${d},${i},this.value.trim())"><select class=a onchange="en(${d},${i},this.value)">${eopts(x.g,x.n)}</select><input class="a own" placeholder="…lub wpisz własną nazwę" class=own onchange="if(this.value.trim())en(${d},${i},this.value.trim())"><span class=mu>serie × powt.</span><input type=number inputmode=numeric value="${x.s}" title="Serie" onchange="ed(${d},${i},'s',this.value)"><input type=number inputmode=numeric value="${x.r}" title="Powtórzenia" onchange="ed(${d},${i},'r',this.value)"><button class="ib x" title="Usuń" onclick="de(${d},${i})">✕</button></div>`);
   h+=addForm(d)+'</div></details>'});
- h+=`<button class=pri onclick="ad()">+ Nowy trening</button><div class=card style="margin-top:14px"><b>Dane</b><div class=row style="margin-top:8px"><button onclick="exp()">Eksport</button><button onclick="$('#fi').click()">Import</button><input id=fi type=file accept=".json,application/json" hidden onchange="imp(this)"><button onclick="if(rz){localStorage.removeItem(K);location.reload()}else{rz=1;rs()}">${rz?'Na pewno? Kliknij ponownie':'Zeruj wszystko'}</button></div></div>`;
+ h+=`<button class=pri onclick="ad()">+ Nowy trening</button><div class=card style="margin-top:14px"><b>Dane</b><div class=mu style="margin-top:4px">${dinfo()}</div><div class=row style="margin-top:8px"><button onclick="exp()">Eksport</button><button onclick="$('#fi').click()">Import</button><input id=fi type=file accept=".json,application/json" hidden onchange="imp(this)"><button onclick="if(rz){S={plan:[],log:{},cur:0,asked:'',gyms:[],v:5};save();location.reload()}else{rz=1;rs()}">${rz?'Na pewno? Kliknij ponownie':'Zeruj wszystko'}</button></div></div>`;
  $('#sb').innerHTML=h}
 const vv=window.visualViewport;let fe=null;const isF=t=>/^(INPUT|SELECT|TEXTAREA)$/.test(t||'');
 const kbh=()=>{const h=vv?Math.max(0,window.innerHeight-vv.height-vv.offsetTop):0;document.documentElement.style.setProperty('--kb',Math.round(h)+'px');return h};
@@ -330,6 +373,45 @@ document.addEventListener('focusin',e=>{if(isF(e.target.tagName)){fe=e.target;[8
 document.addEventListener('focusout',()=>setTimeout(()=>{if(!isF((document.activeElement||{}).tagName))fe=null;kbh()},300));
 const sdEl=$('#sd');sdEl.querySelector('summary').addEventListener('click',()=>{const pin=()=>{if(!sdEl.open)return;scrollTo({top:sdEl.getBoundingClientRect().top+scrollY-66,behavior:'smooth'})};setTimeout(pin,30);setTimeout(pin,400)});
 $('#sb').addEventListener('click',e=>{const sm=e.target.closest('summary');if(!sm)return;const d=sm.parentElement;if(!d||!d.classList.contains('tr'))return;const pin=()=>{if(!d.open)return;scrollTo({top:d.getBoundingClientRect().top+scrollY-66,behavior:'smooth'})};setTimeout(pin,30);setTimeout(pin,400)});
+const GYMS_DEF=[
+{n:'Xtreme Fitness Białystok – Jaśminowa',a:'ul. Jaśminowa 58, 15-814 Białystok',p:'725 025 320',tel:'725025320',u:'https://www.xtremefitness.pl/kluby/XF_Bialystok',src:1,h:[['06:00','23:00'],['06:00','23:00'],['06:00','23:00'],['06:00','23:00'],['06:00','23:00'],['08:00','20:00'],['08:00','18:00']]},
+{n:'Xtreme Fitness Białystok – Andersa',a:'ul. Andersa, Białystok',h:Array(7).fill(null)},
+{n:'Maniac Gym',a:'ul. Warszawska 79A, 15-201 Białystok',p:'+48 85 740 69 31',tel:'+48857406931',u:'https://maniacgym.pl/',src:1,ex:['2026-11-01','2026-11-11'],note:'1 i 11 listopada klub nieczynny (wg strony klubu).',h:[['06:45','22:00'],['06:45','22:00'],['06:45','22:00'],['06:45','22:00'],['06:45','22:00'],['08:00','19:00'],['10:00','18:00']]}
+];
+const WD=['Pon','Wt','Śr','Czw','Pt','Sob','Nd'];
+const gyH=i=>S.gyms[i].h||Array(7).fill(null);
+const tmin=t=>{const[h,m]=t.split(':');return (+h)*60+(+m)};
+const dayIdx=d=>(d.getDay()+6)%7;
+function gStatus(i){const h=gyH(i),now=new Date(),mins=now.getHours()*60+now.getMinutes(),x=h[dayIdx(now)];
+ if(!h.some(Boolean))return{k:'none',t:''};
+ if(S.gyms[i].ex&&S.gyms[i].ex.includes(ymd(now)))return{k:'closed',t:'Dziś nieczynne (dzień wolny)'};
+ if(!x)return{k:'closed',t:'Dziś zamknięte'};
+ const o=tmin(x[0]);let c=tmin(x[1]);const over=c<=o;if(over)c+=1440;
+ if((mins>=o&&mins<c)||(over&&mins<c-1440))return{k:'open',t:'Zamknięcie dziś o '+x[1]};
+ if(mins<o)return{k:'closed',t:'Dziś otwarcie o '+x[0]};
+ return{k:'closed',t:'Dziś było od '+x[0]+' do '+x[1]};
+}
+function gymCard(){if(!S.gyms.length)return '<div class=card><div class=mu>Brak siłowni. Zaimportuj kopię danych, aby je przywrócić.</div></div>';let h='<div class=card><div class=mu style="margin-bottom:2px">Siłownie w Białymstoku</div>';
+ S.gyms.forEach((g,i)=>{const st=gStatus(i),lab=st.k==='open'?'Teraz otwarte':st.k==='closed'?'Zamknięte':'Brak godzin';
+  h+=`<div style="padding:10px 0;${i?'border-top:1px solid var(--ln)':''}"><div class=row style="align-items:flex-start"><div class=sp style="min-width:0"><b>${esc(g.n)}</b><div class=mu style="font-size:12px;margin-top:2px">${esc(g.a)}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none"><span class="badge ${st.k}">${lab}</span><button class=ib title="Godziny otwarcia" onclick="ginfo(${i})">i</button></div></div></div>`});
+ return h+'</div>'}
+setInterval(()=>{if(tab=='c'&&cs)render()},60000);
+function ginfo(i){const g=S.gyms[i],hh=gyH(i),di=dayIdx(new Date()),any=hh.some(Boolean);
+ $('#md').innerHTML=`<div><div class=row><b class=sp style="font-size:17px">${esc(g.n)}</b><button onclick="$('#md').style.display='none'">✕</button></div>
+ <div class=mu style="margin-top:4px">${esc(g.a)}</div>
+ ${g.tel?`<div style="margin-top:6px"><a href="tel:${g.tel}" style="color:var(--ac);text-decoration:none">${esc(g.p)}</a></div>`:''}
+ <div style="margin-top:14px;font-weight:700">Godziny otwarcia</div>
+ <table class=tb>${WD.map((w,d)=>{const x=hh[d];return `<tr style="${d===di?'color:var(--ac);font-weight:700':''}"><td>${w}</td><td>${x?x[0]+' – '+x[1]:(any?'zamknięte':'—')}</td></tr>`}).join('')}</table>
+ <div class=mu style="margin-top:10px;font-size:12px">${g.src?'Źródło: strona klubu, stan na 8.11.2026.':'Brak danych o godzinach.'}</div>
+ ${g.note?`<div class=mu style="margin-top:6px;font-size:12px">Uwaga: ${esc(g.note)}</div>`:''}
+ ${g.u?`<div class=row style="margin-top:14px;justify-content:flex-end"><a class=chip target=_blank rel=noopener href="${g.u}" style="background:var(--ln);color:var(--tx);text-decoration:none">Strona klubu ↗</a></div>`:''}
+ </div>`;
+ $('#md').style.display='flex'}
+const nextEx=()=>{const e=S.log[today()],L=exs(e);for(let i=0;i<L.length;i++){const x=L[i],ss=e&&e.ex[x.n]?e.ex[x.n].sets:def(x);if(!ss.every(t=>t.ok))return i}return -1};
+const pinNext=()=>{if(tab!='t')return;const k=nextEx();if(k<0)return;const el=document.getElementById('ex'+k);if(!el)return;scrollTo({top:el.getBoundingClientRect().top+scrollY-66,behavior:'smooth'})};
+if(!S.gyms){S.gyms=JSON.parse(JSON.stringify(GYMS_DEF));save()}
 render();rs();
+setTimeout(pinNext,150);
+
 </script><script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}</script>
 </body></html>
