@@ -19,9 +19,9 @@ select{font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--
 .mu{color:var(--mu);font-size:13px}.h1{font-size:24px;font-weight:700}.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.sp{flex:1}
 .chip{padding:7px 14px;border-radius:99px}.chip.on{background:var(--ac);color:#fff}
 .tab{flex:1;padding:10px;border-radius:12px;font-weight:600}.tab.on{background:var(--tx);color:var(--bg)}
-.set{display:flex;gap:8px;align-items:center;margin-top:10px}.set b{width:16px;color:var(--mu);font-size:13px;text-align:center}
+.set{display:flex;gap:8px;align-items:center;margin-top:10px}.set b{margin-left:-4px;width:16px;color:var(--mu);font-size:13px;text-align:center}
 #md{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:20;padding:16px}#md>div{background:var(--card);border-radius:16px;max-width:520px;width:100%;max-height:90vh;overflow:auto;padding:14px}.zoom{position:fixed;inset:0;width:100%!important;height:100%;object-fit:contain;background:#000;z-index:30;border-radius:0!important}
-.set i{font-style:normal;color:var(--mu);font-size:12px}.set.ok .f{border-color:var(--ok)}.set.ok .ck{background:var(--ok);color:#fff}.ck{width:44px;height:44px;padding:0;flex:none;font-size:18px}
+.set i{font-style:normal;color:var(--mu);font-size:9px}.set.ok .f{border-color:var(--ok)}.set.ok .ck{background:var(--ok);color:#fff}.ck{width:38px;height:38px;padding:0;flex:none;font-size:18px}
 .bar{height:8px;background:var(--ln);border-radius:9px;overflow:hidden;margin-top:5px}.bar>div{height:100%;background:var(--ac)}
 .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:10px}
 .day{aspect-ratio:1;padding:2px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:10px;font-weight:600;background:var(--bg)}
@@ -35,7 +35,7 @@ details{background:var(--card);border:1px solid var(--ln);border-radius:16px;mar
 .ib{width:30px;height:30px;padding:0;border-radius:50%;flex:none;font:italic 700 16px Georgia,serif;line-height:1;background:transparent;border:1.5px solid var(--mu);color:#339af0}.ib.x{font:700 13px system-ui,sans-serif;color:#f03e3e}
 sup{font-size:.68em;color:var(--ac);font-weight:600;line-height:0;margin-left:1px}.chip.sm{padding:4px 11px;font-size:13px}
 .sw{display:flex;gap:10px;margin-top:10px}.sl{flex:1;min-width:0}.sl .set:first-child{margin-top:0}
-.vb{writing-mode:vertical-rl;transform:rotate(180deg);width:30px;padding:8px 0;border-radius:10px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;background:var(--bg);border:1px solid var(--ln);color:var(--mu);flex:none}.vb.on{background:var(--ok);border-color:var(--ok);color:#fff}.ck2{display:inline-block;writing-mode:horizontal-tb;transform:rotate(180deg);position:relative;top:-7px;font-size:14px;line-height:1}
+.vb{position:relative;width:30px;min-height:104px;padding:0;overflow:hidden;border-radius:10px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;background:var(--bg);border:1px solid var(--ln);color:var(--tx);opacity:.75;flex:none}.vbt{position:absolute;left:50%;top:50%;white-space:nowrap;line-height:1;transform:translate(-50%,-50%) rotate(-90deg)}.vb.on{background:var(--ok);border-color:var(--ok);color:#fff;opacity:1}.ck2{display:inline-block;position:relative;left:-7px;margin-right:3px;font-size:14px;line-height:1;transform:rotate(90deg);opacity:.6}.vb.on .ck2{opacity:1}
 .f{flex:1;min-width:0;display:flex;align-items:center;gap:4px;background:var(--bg);border:1px solid var(--ln);border-radius:12px;padding:0 10px}.f:focus-within{border-color:var(--ac)}
 .f input{border:0;background:transparent;width:100%;min-width:0;height:34px;padding:0;font-size:18px;font-weight:600;text-align:center}.f input:focus{outline:0}
 .own{font-size:12px!important;height:36px;padding:0 10px!important;text-align:center;color:var(--mu)}
@@ -54,6 +54,12 @@ select{appearance:none;-webkit-appearance:none;padding-right:30px!important;back
 .badge.open{background:var(--ok);color:#fff}
 .badge.closed{background:var(--ln);color:var(--mu)}
 .badge.none{border:1px dashed var(--mu);color:var(--mu)}
+.kgw{flex:11 1 0;min-width:0;display:flex;align-items:center;gap:2px;margin-left:-2px}.rpw{flex:9 1 0;min-width:0;display:flex;align-items:center;gap:2px}.rpw .f{flex:1;min-width:0}.kgw .f{flex:1;min-width:0}.pm{width:14px;height:34px;padding:0;flex:none;border:0;border-radius:0;background:none;font-size:15px;font-weight:300;line-height:1;color:var(--mu)}
+.rpw .f{padding-right:2px}
+@media (prefers-color-scheme:light){.f{border-width:2px}}
+:root[data-theme="light"] .f{border-width:2px}
+.soc{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--ln);border-radius:99px;color:var(--tx);text-decoration:none;font-size:13px}.soc:active{opacity:.7}
+.socrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:14px}.socrow .soc{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px;border-radius:12px;font-size:11.5px;text-align:center;min-width:0}
 </style><link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#e8590c">
 <meta name="mobile-web-app-capable" content="yes">
@@ -220,6 +226,8 @@ const full=d=>{const ex={};S.plan[d].e.forEach(x=>{ex[x.n]={g:x.g,sets:Array.fro
 const ent=()=>{const t=today();return S.log[t]||(S.log[t]={d:vd,fin:0,ex:{},st:Date.now()})};
 function mat(i){const e=ent(),x=exs(e)[i];if(!e.ex[x.n])e.ex[x.n]={g:x.g,sets:def(x)};return e.ex[x.n].sets}
 const sv=(i,j,f,v)=>{mat(i)[j][f]=v;save()};
+const adj=(i,j,d)=>{const s=mat(i)[j];s.w=Math.max(0,Math.round(((parseFloat(s.w)||0)+d)*10)/10);save();render()};
+const adjr=(i,j,d)=>{const s=mat(i)[j];s.r=Math.max(0,(parseInt(s.r)||0)+d);save();render()};
 const ck=(i,j)=>{const s=mat(i)[j];s.ok=s.ok?0:1;save();render()};
 const ns=(i,d)=>{const a=mat(i);if(d>0)a.push({...a[a.length-1],ok:0});else if(a.length>1)a.pop();save();render()};
 const fin=()=>{const e=ent();if(!e.fin){e.fin=1;e.en=Date.now();S.cur=(e.d+1)%N()}save();render()};
@@ -243,8 +251,8 @@ function vToday(){if(!N())return '<div class=card><b>Brak treningów</b><div cla
  if(!e&&chg)h+=`<div class=tg>${S.plan.map((p,i)=>`<button class="tt ${i==vd?'on':''}" onclick="vd=${i};chg=0;render()"><span>Trening ${i+1}</span>${i==S.cur?'<i class=dot></i>':''}<small>${esc(p.n)}</small></button>`).join('')}</div>`;
  h+=`<div class=bar><div style="width:${tot?dn/tot*100:0}%"></div></div><div class=mu>${dn}/${tot} serii</div></div>`;
  exs(e).forEach((x,i)=>{const ss=e&&e.ex[x.n]?e.ex[x.n].sets:def(x),al=ss.every(s=>s.ok),fs=x.n.length>38?13:x.n.length>28?14.5:16;
-  h+=`<div class=card id=ex${i} style="border-left:4px solid ${gc(x.g)}"><div class=eh><div class=en><div class=eg style="color:${gc(x.g)}">${esc(x.g)}</div><b style="font-size:${fs}px">${esc(x.n)}</b><div class=mu>plan ${x.s}×${x.r}</div></div><button class=ib title="Jak wykonać" onclick="info(rg(${JSON.stringify(x.n).replace(/"/g,'&quot;')}))">i</button>${i>=P.e.length?`<button class="ib x" title="Usuń ćwiczenie" onclick="rx(${i})">✕</button>`:''}</div><div class=sw><button class="vb ${al?'on':''}" onclick="alx(${i})">${al?'<span class=ck2>✓</span>':''}wszystkie</button><div class=sl>`;
-  ss.forEach((s,j)=>h+=`<div class="set ${s.ok?'ok':''}"><b>${j+1}</b><label class=f><input type=number inputmode=decimal step=.5 placeholder=0 value="${s.w||''}" oninput="sv(${i},${j},'w',this.value)"><i>kg</i></label><label class=f><input type=number inputmode=numeric placeholder=0 value="${s.r}" oninput="sv(${i},${j},'r',this.value)"><i>powt.</i></label><button class=ck onclick="ck(${i},${j})">✓</button></div>`);
+  h+=`<div class=card id=ex${i} style="border-left:4px solid ${gc(x.g)}"><div class=eh><div class=en><div class=eg style="color:${gc(x.g)}">${esc(x.g)}</div><b style="font-size:${fs}px">${esc(x.n)}</b><div class=mu>plan ${x.s}×${x.r}</div></div><button class=ib title="Jak wykonać" onclick="info(rg(${JSON.stringify(x.n).replace(/"/g,'&quot;')}))">i</button>${i>=P.e.length?`<button class="ib x" title="Usuń ćwiczenie" onclick="rx(${i})">✕</button>`:''}</div><div class=sw><button class="vb ${al?'on':''}" onclick="alx(${i})"><span class=vbt><span class=ck2>✓</span>wszystkie</span></button><div class=sl>`;
+  ss.forEach((s,j)=>h+=`<div class="set ${s.ok?'ok':''}"><b>${j+1}</b><div class=kgw><button class=pm title="Odejmij 2,5 kg" onclick="adj(${i},${j},-2.5)">−</button><label class=f><input type=number inputmode=decimal step=.5 placeholder=0 value="${s.w||''}" oninput="sv(${i},${j},'w',this.value)"><i>kg</i></label><button class=pm title="Dodaj 2,5 kg" onclick="adj(${i},${j},2.5)">+</button></div><div class=rpw><button class=pm title="Odejmij 1" onclick="adjr(${i},${j},-1)">−</button><label class=f><input type=number inputmode=numeric placeholder=0 value="${s.r}" oninput="sv(${i},${j},'r',this.value)"><i>powt.</i></label><button class=pm title="Dodaj 1" onclick="adjr(${i},${j},1)">+</button></div><button class=ck onclick="ck(${i},${j})">✓</button></div>`);
   h+='</div></div></div>'});
  h+=addCard();h+=`<button class="pri big" onclick="fin()">${e&&e.fin?'Trening zakończony ✓ (zapisz zmiany)':'Zakończ trening'}</button>`;
  if(e)h+=`<div style="text-align:center;margin-top:10px"><button onclick="undo()">Usuń dzisiejszy trening</button></div>`;
@@ -363,7 +371,7 @@ function rs(){
   p.e.forEach((x,i)=>h+=`<div class=ex><select class=a onchange="eg(${d},${i},this.value)">${gopts(x.g)}</select><input class="a own" placeholder="…lub wpisz własną nazwę" class=own onchange="if(this.value.trim())eg(${d},${i},this.value.trim())"><select class=a onchange="en(${d},${i},this.value)">${eopts(x.g,x.n)}</select><input class="a own" placeholder="…lub wpisz własną nazwę" class=own onchange="if(this.value.trim())en(${d},${i},this.value.trim())"><span class=mu>serie × powt.</span><input type=number inputmode=numeric value="${x.s}" title="Serie" onchange="ed(${d},${i},'s',this.value)"><input type=number inputmode=numeric value="${x.r}" title="Powtórzenia" onchange="ed(${d},${i},'r',this.value)"><button class="ib x" title="Usuń" onclick="de(${d},${i})">✕</button></div>`);
   h+=addForm(d)+'</div></details>'});
  h+=`<button class=pri onclick="ad()">+ Nowy trening</button><div class=card style="margin-top:14px"><b>Dane</b><div class=mu style="margin-top:4px">${dinfo()}</div><div class=row style="margin-top:8px"><button onclick="exp()">Eksport</button><button onclick="$('#fi').click()">Import</button><input id=fi type=file accept=".json,application/json" hidden onchange="imp(this)"><button onclick="if(rz){S={plan:[],log:{},cur:0,asked:'',gyms:[],v:5};save();location.reload()}else{rz=1;rs()}">${rz?'Na pewno? Kliknij ponownie':'Zeruj wszystko'}</button></div></div>`;
- $('#sb').innerHTML=h}
+ h+=installCard();$('#sb').innerHTML=h}
 const vv=window.visualViewport;let fe=null;const isF=t=>/^(INPUT|SELECT|TEXTAREA)$/.test(t||'');
 const kbh=()=>{const h=vv?Math.max(0,window.innerHeight-vv.height-vv.offsetTop):0;document.documentElement.style.setProperty('--kb',Math.round(h)+'px');return h};
 const rv=el=>{if(!vv)return;const r=el.getBoundingClientRect();window.scrollBy({top:(r.top+r.height/2)-(vv.offsetTop+vv.height/2),behavior:'smooth'})};
@@ -382,20 +390,34 @@ const WD=['Pon','Wt','Śr','Czw','Pt','Sob','Nd'];
 const gyH=i=>S.gyms[i].h||Array(7).fill(null);
 const tmin=t=>{const[h,m]=t.split(':');return (+h)*60+(+m)};
 const dayIdx=d=>(d.getDay()+6)%7;
-function gStatus(i){const h=gyH(i),now=new Date(),mins=now.getHours()*60+now.getMinutes(),x=h[dayIdx(now)];
+function gStatus(i,d){d=d||new Date();const g=S.gyms[i],h=gyH(i),today=ymd(d)===ymd(new Date()),x=h[dayIdx(d)];
  if(!h.some(Boolean))return{k:'none',t:''};
- if(S.gyms[i].ex&&S.gyms[i].ex.includes(ymd(now)))return{k:'closed',t:'Dziś nieczynne (dzień wolny)'};
- if(!x)return{k:'closed',t:'Dziś zamknięte'};
- const o=tmin(x[0]);let c=tmin(x[1]);const over=c<=o;if(over)c+=1440;
+ if(g.ex&&g.ex.includes(ymd(d)))return{k:'closed',t:'Dzień wolny'};
+ if(!x)return{k:'closed',t:today?'Dziś zamknięte':'Zamknięta tego dnia'};
+ if(!today)return{k:'open',t:'Otwarta tego dnia'};
+ const now=new Date(),mins=now.getHours()*60+now.getMinutes(),o=tmin(x[0]);let c=tmin(x[1]);const over=c<=o;if(over)c+=1440;
  if((mins>=o&&mins<c)||(over&&mins<c-1440))return{k:'open',t:'Zamknięcie dziś o '+x[1]};
  if(mins<o)return{k:'closed',t:'Dziś otwarcie o '+x[0]};
  return{k:'closed',t:'Dziś było od '+x[0]+' do '+x[1]};
 }
-function gymCard(){if(!S.gyms.length)return '<div class=card><div class=mu>Brak siłowni. Zaimportuj kopię danych, aby je przywrócić.</div></div>';let h='<div class=card><div class=mu style="margin-bottom:2px">Siłownie w Białymstoku</div>';
- S.gyms.forEach((g,i)=>{const st=gStatus(i),lab=st.k==='open'?'Teraz otwarte':st.k==='closed'?'Zamknięte':'Brak godzin';
+function gymCard(){if(!S.gyms.length)return '<div class=card><div class=mu>Brak siłowni. Zaimportuj kopię danych, aby je przywrócić.</div></div>';
+ const D=cs?pd(cs):new Date(),today=ymd(D)===ymd(new Date()),dl=cs?pd(cs).toLocaleDateString('pl-PL',{day:'numeric',month:'long'}):'';
+ let h=`<div class=card><div class=row style="margin-bottom:2px"><div class=sp><div class=mu>Siłownie w Białymstoku</div></div><div class=mu style="font-size:12px">${today?'teraz':'stan na '+esc(dl)}</div></div>`;
+ S.gyms.forEach((g,i)=>{const st=gStatus(i,D),lab=st.k==='open'?(today?'Teraz otwarte':'Otwarta'):st.k==='closed'?(today?'Zamknięte':'Zamknięta'):'Brak godzin';
   h+=`<div style="padding:10px 0;${i?'border-top:1px solid var(--ln)':''}"><div class=row style="align-items:flex-start"><div class=sp style="min-width:0"><b>${esc(g.n)}</b><div class=mu style="font-size:12px;margin-top:2px">${esc(g.a)}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none"><span class="badge ${st.k}">${lab}</span><button class=ib title="Godziny otwarcia" onclick="ginfo(${i})">i</button></div></div></div>`});
  return h+'</div>'}
 setInterval(()=>{if(tab=='c'&&cs)render()},60000);
+const SOC=[
+{n:'Xtreme Fitness Białystok – Jaśminowa',ig:'https://www.instagram.com/xfg_bialystokjasminowa',fb:'https://www.facebook.com/share/1F9vPpcTe1/'},
+{n:'Xtreme Fitness Białystok – Andersa',ig:'https://www.instagram.com/xfg_bialystokandersa',fb:'https://www.facebook.com/share/1E4BTQMGuK/'},
+{n:'Maniac Gym',ig:'https://www.instagram.com/maniacgym.bialystok',fb:'https://www.facebook.com/share/1UNigXkuHQ/'}];
+const ICO_IG='<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".9" fill="currentColor"/></svg>';
+const ICO_FB='<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.5 1.6-1.5h1.6V4.4c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.4-4 4.1v2.4H7.6V14h2.7v8z"/></svg>';
+const ICO_WWW='<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 3 2.5 15 0 18M12 3c-2.5 3-2.5 15 0 18"/></svg>';
+function socRow(g){const so=SOC.find(x=>x.n===g.n)||{};let h='';
+ if(so.ig)h+=`<a class=soc href="${so.ig}" target=_blank rel=noopener aria-label="Instagram">${ICO_IG}<span>Instagram</span></a>`;
+ if(so.fb)h+=`<a class=soc href="${so.fb}" target=_blank rel=noopener aria-label="Facebook">${ICO_FB}<span>Facebook</span></a>`;
+ return h}
 function ginfo(i){const g=S.gyms[i],hh=gyH(i),di=dayIdx(new Date()),any=hh.some(Boolean);
  $('#md').innerHTML=`<div><div class=row><b class=sp style="font-size:17px">${esc(g.n)}</b><button onclick="$('#md').style.display='none'">✕</button></div>
  <div class=mu style="margin-top:4px">${esc(g.a)}</div>
@@ -404,12 +426,22 @@ function ginfo(i){const g=S.gyms[i],hh=gyH(i),di=dayIdx(new Date()),any=hh.some(
  <table class=tb>${WD.map((w,d)=>{const x=hh[d];return `<tr style="${d===di?'color:var(--ac);font-weight:700':''}"><td>${w}</td><td>${x?x[0]+' – '+x[1]:(any?'zamknięte':'—')}</td></tr>`}).join('')}</table>
  <div class=mu style="margin-top:10px;font-size:12px">${g.src?'Źródło: strona klubu, stan na 8.11.2026.':'Brak danych o godzinach.'}</div>
  ${g.note?`<div class=mu style="margin-top:6px;font-size:12px">Uwaga: ${esc(g.note)}</div>`:''}
- ${g.u?`<div class=row style="margin-top:14px;justify-content:flex-end"><a class=chip target=_blank rel=noopener href="${g.u}" style="background:var(--ln);color:var(--tx);text-decoration:none">Strona klubu ↗</a></div>`:''}
+ <div class=socrow>${socRow(g)}${g.u?`<a class=soc href="${g.u}" target=_blank rel=noopener aria-label="Strona klubu">${ICO_WWW}<span>Strona klubu</span></a>`:''}</div>
  </div>`;
  $('#md').style.display='flex'}
 const nextEx=()=>{const e=S.log[today()],L=exs(e);for(let i=0;i<L.length;i++){const x=L[i],ss=e&&e.ex[x.n]?e.ex[x.n].sets:def(x);if(!ss.every(t=>t.ok))return i}return -1};
 const pinNext=()=>{if(tab!='t')return;const k=nextEx();if(k<0)return;const el=document.getElementById('ex'+k);if(!el)return;scrollTo({top:el.getBoundingClientRect().top+scrollY-66,behavior:'smooth'})};
 if(!S.gyms){S.gyms=JSON.parse(JSON.stringify(GYMS_DEF));save()}
+let defPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();defPrompt=e});
+window.addEventListener('appinstalled',()=>{defPrompt=null;rs()});
+const isInst=()=>(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true;
+function installCard(){if(isInst())return '<div class=card style="margin-top:14px"><b>Aplikacja</b><div class=mu style="margin-top:4px">Aplikacja jest zainstalowana na ekranie głównym.</div></div>';
+ return '<div class=card style="margin-top:14px"><b>Aplikacja</b><div class=mu style="margin-top:4px">Zainstaluj Siłownię na ekranie głównym, żeby otwierała się jak zwykła aplikacja.</div><div class=row style="margin-top:10px"><button class=pri onclick="instApp()">Zainstaluj aplikację</button></div></div>'}
+async function instApp(){
+ if(defPrompt){defPrompt.prompt();try{await defPrompt.userChoice}catch(e){}defPrompt=null;rs();return}
+ alert('Zainstaluj ręcznie: w Chrome dotknij ⋮ (trzy kropki) w prawym górnym rogu i wybierz „Zainstaluj aplikację” lub „Dodaj do ekranu głównego”. Na iPhonie: Udostępnij → Dodaj do ekranu głównego.');
+}
 render();rs();
 setTimeout(pinNext,150);
 
