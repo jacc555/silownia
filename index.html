@@ -37,7 +37,7 @@ sup{font-size:.68em;color:var(--ac);font-weight:600;line-height:0;margin-left:1p
 .sw{display:flex;gap:10px;margin-top:10px}.sl{flex:1;min-width:0}.sl .set:first-child{margin-top:0}
 .vb{position:relative;width:30px;min-height:104px;padding:0;overflow:hidden;border-radius:10px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;background:var(--bg);border:1px solid var(--ln);color:var(--tx);opacity:.75;flex:none}.vbt{position:absolute;left:50%;top:50%;white-space:nowrap;line-height:1;transform:translate(-50%,-50%) rotate(-90deg)}.vb.on{background:var(--ok);border-color:var(--ok);color:#fff;opacity:1}.ck2{display:inline-block;position:relative;left:-7px;margin-right:3px;font-size:14px;line-height:1;transform:rotate(90deg);opacity:.6}.vb.on .ck2{opacity:1}
 .f{flex:1;min-width:0;display:flex;align-items:center;gap:4px;background:var(--bg);border:1px solid var(--ln);border-radius:12px;padding:0 10px}.f:focus-within{border-color:var(--ac)}
-.f input{border:0;background:transparent;width:100%;min-width:0;height:34px;padding:0;font-size:18px;font-weight:600;text-align:center}.f input:focus{outline:0}
+.f input{border:0;background:transparent;width:100%;min-width:0;height:34px;padding:0;font-size:20px;font-weight:600;text-align:center}.f input:focus{outline:0}
 .own{font-size:12px!important;height:36px;padding:0 10px!important;text-align:center;color:var(--mu)}
 .ex{margin-top:10px;padding-top:10px;border-top:1px solid var(--ln);align-items:center}.ex .a{grid-column:1/5}
 select{appearance:none;-webkit-appearance:none;padding-right:30px!important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23339af0' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center}
@@ -54,14 +54,13 @@ select{appearance:none;-webkit-appearance:none;padding-right:30px!important;back
 .badge.open{background:var(--ok);color:#fff}
 .badge.closed{background:var(--ln);color:var(--mu)}
 .badge.none{border:1px dashed var(--mu);color:var(--mu)}
-.kgw{flex:11 1 0;min-width:0;display:flex;align-items:center;gap:2px;margin-left:-2px}.rpw{flex:9 1 0;min-width:0;display:flex;align-items:center;gap:2px}.rpw .f{flex:1;min-width:0}.kgw .f{flex:1;min-width:0}.pm{width:14px;height:34px;padding:0;flex:none;border:0;border-radius:0;background:none;font-size:15px;font-weight:300;line-height:1;color:var(--mu)}
-.rpw .f{padding-right:2px}
+.kgw{flex:1 1 0;min-width:0;display:flex;align-items:center;gap:2px;margin-left:-2px}.rpw{flex:1 1 0;min-width:0;display:flex;align-items:center;gap:2px}.rpw .f{flex:1;min-width:0}.kgw .f{flex:1;min-width:0}.pm{width:14px;height:34px;padding:0;flex:none;border:0;border-radius:0;background:none;font-size:15px;font-weight:300;line-height:1;color:var(--mu)}
 @media (prefers-color-scheme:light){.f{border-width:2px}}
 :root[data-theme="light"] .f{border-width:2px}
 .soc{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--ln);border-radius:99px;color:var(--tx);text-decoration:none;font-size:13px}.soc:active{opacity:.7}
 .socrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:14px}.socrow .soc{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px;border-radius:12px;font-size:11.5px;text-align:center;min-width:0}
-.set .f{position:relative;padding:0}.set .f input{padding:0 22px}.set .f i{position:absolute;right:5px;top:50%;transform:translateY(-50%);pointer-events:none}.rpw .f i{right:7px}.rpw .f input{padding:0 28px}
-</style><link rel="manifest" href="manifest.json">
+.set .f{position:relative;padding:0 3px;justify-content:center;gap:3px}.set .f input{flex:none;width:1ch;min-width:0;padding:0;text-align:center;-moz-appearance:textfield;appearance:textfield}.set .f input::-webkit-outer-spin-button,.set .f input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}.set .f i{position:static;transform:none;flex:none;pointer-events:none;line-height:1}
+</style><link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#e8590c">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -532,8 +531,8 @@ let GR=0;
 function glide(y){cancelAnimationFrame(GR);const y0=scrollY,max=Math.max(0,document.documentElement.scrollHeight-innerHeight),t=Math.max(0,Math.min(max,y)),dist=t-y0;if(Math.abs(dist)<2)return;const T=Math.min(1000,520+Math.abs(dist)*0.22),t0=performance.now();const step=now=>{const k=Math.min(1,(now-t0)/T),e=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;scrollTo(0,y0+dist*e);if(k<1)GR=requestAnimationFrame(step)};GR=requestAnimationFrame(step)}
 ['touchstart','wheel','mousedown'].forEach(ev=>addEventListener(ev,()=>cancelAnimationFrame(GR),{passive:true}));
 const fcv=document.createElement('canvas').getContext('2d');
-function fitIn(el){const cs=getComputedStyle(el),avail=el.clientWidth-(parseFloat(cs.paddingLeft)||0)-(parseFloat(cs.paddingRight)||0),t=String(el.value||'');let fs=18;fcv.font=`${cs.fontWeight} ${fs}px ${cs.fontFamily}`;while(t&&fcv.measureText(t).width>avail&&fs>9){fs-=1;fcv.font=`${cs.fontWeight} ${fs}px ${cs.fontFamily}`}el.style.fontSize=fs===18?'':fs+'px'}
-const fitAll=()=>document.querySelectorAll('.set input').forEach(fitIn);
+function fitIn(el){const f=el.parentNode,lb=f.querySelector('i'),cs=getComputedStyle(el),fc=getComputedStyle(f),avail=f.clientWidth-(parseFloat(fc.paddingLeft)||0)-(parseFloat(fc.paddingRight)||0)-(lb?lb.offsetWidth+(parseFloat(fc.columnGap)||0):0),bad=el.validity&&el.validity.badInput;let t=String(el.value||'');if(t)el.dataset.lt=t;else if(bad)t=(el.dataset.lt||'')+'0';else el.dataset.lt='';const m=t||el.placeholder||'0',w=s=>{fcv.font=`${cs.fontWeight} ${s}px ${cs.fontFamily}`;return Math.ceil(fcv.measureText(m).width)+3};let fs=20;while(w(fs)>avail&&fs>9)fs--;el.style.fontSize=fs===20?'':fs+'px';el.style.width=Math.max(12,Math.min(w(fs),avail))+'px'}
+const fitAll=()=>document.querySelectorAll('.set input').forEach(fitIn);addEventListener('resize',fitAll);
 render();rs();
 if('scrollRestoration' in history)history.scrollRestoration='manual';scrollTo(0,0);
 
