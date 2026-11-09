@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Diagnostyka instalacji</title>
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+body{font:15px/1.45 system-ui,sans-serif;margin:0;padding:14px;background:#f3f4f6;color:#14171c}
+h1{font-size:18px;margin:0 0 4px}.s{font-size:12px;opacity:.7;margin-bottom:10px}
+.r{background:#fff;border-radius:10px;padding:8px 10px;margin:6px 0;word-break:break-word;border-left:5px solid #adb5bd}
+.ok{border-left-color:#2f9e44}.bad{border-left-color:#e03131}.w{border-left-color:#f59f00}
+button{font:inherit;padding:10px 14px;border:0;border-radius:10px;background:#e8590c;color:#fff;margin-top:6px}
+@media(prefers-color-scheme:dark){body{background:#0e1013;color:#eef0f3}.r{background:#171a1f}}
+</style></head><body>
+<h1>Diagnostyka instalacji</h1>
+<div class="s">Poczekaj ok. 5 s, potem zrób zrzut całej strony.</div>
+<div id="o"></div>
+<script>
+const o=document.getElementById('o');
+const add=(c,t)=>{const d=document.createElement('div');d.className='r '+c;d.textContent=t;o.appendChild(d);return d};
+const same=(a,b)=>a===b;
+let bip=null;
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();bip=e});
+addEventListener('appinstalled',()=>add('ok','Zdarzenie appinstalled – zainstalowano.'));
+
+(async()=>{
+  add(isSecureContext?'ok':'bad','HTTPS / secure context: '+(isSecureContext?'tak':'NIE')+' | '+location.href);
+  add(matchMedia('(display-mode: standalone)').matches?'w':'ok','Tryb wyświetlania: '+(matchMedia('(display-mode: standalone)').matches?'standalone (otwarte jako aplikacja)':'karta przeglądarki'));
+  add('','Przeglądarka: '+navigator.userAgent.replace(/\s+/g,' ').slice(0,160));
+
+  /* Manifest */
+  let m=null,mu=null;
+  try{
+    const l=document.querySelector('link[rel=manifest]');
+    mu=l?l.href:null;
+    if(!mu){add('bad','Brak <link rel="manifest"> w stronie.')}
+    else{
+      const r=await fetch(mu,{cache:'no-store'});
+      add(r.ok?'ok':'bad','Manifest: '+mu+' → HTTP '+r.status+', typ: '+(r.headers.get('content-type')||'?'));
+      m=await r.json();
+      const st=new URL(m.start_url||'.',mu), sc=new URL(m.scope||'.',mu);
+      const id=new URL(m.id||m.start_url||'.',st.origin).href;
+      add('ok','Nazwa: '+m.name+' | krótka: '+m.short_name+' | display: '+m.display);
+      add('ok','start_url: '+st.href+'\nscope: '+sc.href+'\nID aplikacji: '+id);
+      add(st.href.startsWith(sc.href)?'ok':'bad','start_url w zakresie scope: '+(st.href.startsWith(sc.href)?'tak':'NIE'));
+    }
+  }catch(e){add('bad','Manifest – błąd: '+e.message)}
+
+  /* Ikony */
+  if(m&&Array.isArray(m.icons)){
+    for(const ic of m.icons){
+      const u=new URL(ic.src,mu).href;
+      try{
+        const r=await fetch(u,{cache:'no-store'});
+        const ct=r.headers.get('content-type')||'?';
+        const b=await r.blob();
+        const url=URL.createObjectURL(b);
+        const dim=await new Promise(res=>{const i=new Image();i.onload=()=>res(i.naturalWidth+'x'+i.naturalHeight);i.onerror=()=>res('NIE da się odczytać obrazu');i.src=url});
+        const good=r.ok&&dim===ic.sizes;
+        add(good?'ok':'bad','Ikona '+ic.src+' ('+(ic.purpose||'any')+'): deklarowane '+ic.sizes+', rzeczywiste '+dim+', HTTP '+r.status+', '+ct+', '+Math.round(b.size/102.4)/10+' KB');
+      }catch(e){add('bad','Ikona '+ic.src+' – błąd: '+e.message)}
+    }
+  }
+
+  /* Service worker */
+  if(!('serviceWorker' in navigator)){add('bad','Ta przeglądarka nie obsługuje service workerów.')}
+  else{
+    try{
+      const r=await fetch('sw.js',{cache:'no-store'});
+      add(r.ok?'ok':'bad','sw.js → HTTP '+r.status+', typ: '+(r.headers.get('content-type')||'?')+(r.ok?'':'  (PLIKU NIE MA w tym folderze)'));
+    }catch(e){add('bad','sw.js – błąd pobierania: '+e.message)}
+    try{
+      const reg=await navigator.serviceWorker.register('sw.js');
+      add('ok','Rejestracja service workera udana. Zakres: '+reg.scope);
+      await navigator.serviceWorker.ready;
+      const regs=await navigator.serviceWorker.getRegistrations();
+      add(regs.length?'ok':'bad','Aktywne rejestracje: '+regs.map(x=>x.scope+' ['+(x.active?x.active.state:'brak aktywnego')+']').join(' ; '));
+      add(navigator.serviceWorker.controller?'ok':'w','Strona kontrolowana przez SW: '+(navigator.serviceWorker.controller?'tak':'jeszcze nie (odśwież stronę i sprawdź ponownie)'));
+    }catch(e){add('bad','Rejestracja service workera NIE udała się: '+e.message)}
+  }
+
+  /* beforeinstallprompt */
+  setTimeout(()=>{
+    if(bip){
+      add('ok','beforeinstallprompt: TAK – Chrome uznaje stronę za instalowalną.');
+      const b=document.createElement('button');b.textContent='Spróbuj zainstalować';
+      b.onclick=async()=>{bip.prompt();const c=await bip.userChoice;add(c.outcome==='accepted'?'ok':'w','Wynik: '+c.outcome)};
+      o.appendChild(b);
+    }else add('bad','beforeinstallprompt: NIE – Chrome nie uznał strony za instalowalną (albo aplikacja jest już zainstalowana).');
+  },4500);
+})();
+</script>
+</body></html>
