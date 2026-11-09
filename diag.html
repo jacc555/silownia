@@ -12,7 +12,7 @@ button{font:inherit;padding:10px 14px;border:0;border-radius:10px;background:#e8
 @media(prefers-color-scheme:dark){body{background:#0e1013;color:#eef0f3}.r{background:#171a1f}}
 </style></head><body>
 <h1>Diagnostyka instalacji</h1>
-<div class="s">Poczekaj ok. 5 s, potem zrób zrzut całej strony.</div>
+<div class="s">Wersja 2. Poczekaj ok. 8 s, potem zrób zrzut CAŁEJ strony (przewiń i zrób 2–3 zrzuty, jeśli trzeba).</div>
 <div id="o"></div>
 <script>
 const o=document.getElementById('o');
@@ -27,22 +27,29 @@ addEventListener('appinstalled',()=>add('ok','Zdarzenie appinstalled – zainsta
   add(matchMedia('(display-mode: standalone)').matches?'w':'ok','Tryb wyświetlania: '+(matchMedia('(display-mode: standalone)').matches?'standalone (otwarte jako aplikacja)':'karta przeglądarki'));
   add('','Przeglądarka: '+navigator.userAgent.replace(/\s+/g,' ').slice(0,160));
 
+  /* Czy strona w ogóle zawiera link do manifestu */
+  try{
+    const html=await (await fetch(location.href,{cache:'no-store'})).text();
+    const mt=html.match(/<link[^>]*rel=["']?manifest["']?[^>]*>/i);
+    add(mt?'ok':'bad','Źródło strony pobrane z serwera '+(mt?'ZAWIERA: '+mt[0]:'NIE zawiera <link rel="manifest">')+' (długość: '+html.length+' znaków)');
+  }catch(e){add('bad','Nie udało się pobrać źródła strony: '+e.message)}
+  const dl=[...document.querySelectorAll('link')].map(l=>(l.getAttribute('rel')||'?')+' → '+l.getAttribute('href'));
+  add('','Elementy <link> w DOM: '+(dl.join(' ; ')||'brak'));
+
   /* Manifest */
   let m=null,mu=null;
   try{
-    const l=document.querySelector('link[rel=manifest]');
-    mu=l?l.href:null;
-    if(!mu){add('bad','Brak <link rel="manifest"> w stronie.')}
-    else{
-      const r=await fetch(mu,{cache:'no-store'});
-      add(r.ok?'ok':'bad','Manifest: '+mu+' → HTTP '+r.status+', typ: '+(r.headers.get('content-type')||'?'));
-      m=await r.json();
-      const st=new URL(m.start_url||'.',mu), sc=new URL(m.scope||'.',mu);
-      const id=new URL(m.id||m.start_url||'.',st.origin).href;
-      add('ok','Nazwa: '+m.name+' | krótka: '+m.short_name+' | display: '+m.display);
-      add('ok','start_url: '+st.href+'\nscope: '+sc.href+'\nID aplikacji: '+id);
-      add(st.href.startsWith(sc.href)?'ok':'bad','start_url w zakresie scope: '+(st.href.startsWith(sc.href)?'tak':'NIE'));
-    }
+    const l=document.querySelector('link[rel~=manifest]');
+    mu=l?l.href:new URL('manifest.webmanifest',location.href).href;
+    add(l?'ok':'w',l?'Link do manifestu w DOM: '+mu:'Brak linku w DOM – sprawdzam adres awaryjny: '+mu);
+    const r=await fetch(mu,{cache:'no-store'});
+    add(r.ok?'ok':'bad','Manifest: '+mu+' → HTTP '+r.status+', typ: '+(r.headers.get('content-type')||'?'));
+    m=await r.json();
+    const st=new URL(m.start_url||'.',mu), sc=new URL(m.scope||'.',mu);
+    const id=new URL(m.id||m.start_url||'.',st.origin).href;
+    add('ok','Nazwa: '+m.name+' | krótka: '+m.short_name+' | display: '+m.display);
+    add('ok','start_url: '+st.href+'\nscope: '+sc.href+'\nID aplikacji: '+id);
+    add(st.href.startsWith(sc.href)?'ok':'bad','start_url w zakresie scope: '+(st.href.startsWith(sc.href)?'tak':'NIE'));
   }catch(e){add('bad','Manifest – błąd: '+e.message)}
 
   /* Ikony */
@@ -86,7 +93,7 @@ addEventListener('appinstalled',()=>add('ok','Zdarzenie appinstalled – zainsta
       b.onclick=async()=>{bip.prompt();const c=await bip.userChoice;add(c.outcome==='accepted'?'ok':'w','Wynik: '+c.outcome)};
       o.appendChild(b);
     }else add('bad','beforeinstallprompt: NIE – Chrome nie uznał strony za instalowalną (albo aplikacja jest już zainstalowana).');
-  },4500);
+  },7000);
 })();
 </script>
 </body></html>
