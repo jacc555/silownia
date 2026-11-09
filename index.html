@@ -60,6 +60,7 @@ select{appearance:none;-webkit-appearance:none;padding-right:30px!important;back
 :root[data-theme="light"] .f{border-width:2px}
 .soc{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--ln);border-radius:99px;color:var(--tx);text-decoration:none;font-size:13px}.soc:active{opacity:.7}
 .socrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:14px}.socrow .soc{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px;border-radius:12px;font-size:11.5px;text-align:center;min-width:0}
+.set .f{position:relative;padding:0}.set .f input{padding:0 22px}.set .f i{position:absolute;right:5px;top:50%;transform:translateY(-50%);pointer-events:none}.rpw .f i{right:7px}.rpw .f input{padding:0 28px}
 </style><link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#e8590c">
 <meta name="mobile-web-app-capable" content="yes">
@@ -199,7 +200,7 @@ const xf=()=>{$('#xe').innerHTML=(LIB[$('#xg').value]||[]).map(n=>`<option>${esc
 const xa=()=>{const gn=$('#xgn').value.trim(),n=$('#xn').value.trim()||(gn?'':$('#xe').value),e=ent();if(!n||exs(e).some(x=>x.n==n))return;(e.add=e.add||[]).push({g:gn||$('#xg').value,n,s:+$('#xs').value||3,r:+$('#xr').value||12});save();render()};
 const rx=i=>{const e=ent(),k=i-S.plan[vd].e.length,x=e.add[k];delete e.ex[x.n];e.add.splice(k,1);save();render()};
 const nextFrom=i=>{const e=S.log[today()],L=exs(e);for(let k=1;k<=L.length;k++){const j=(i+k)%L.length,x=L[j],ss=e&&e.ex[x.n]?e.ex[x.n].sets:def(x);if(!ss.every(t=>t.ok))return j}return -1};
-const pinEx=j=>{const el=document.getElementById('ex'+j);if(!el)return;setTimeout(()=>scrollTo({top:el.getBoundingClientRect().top+scrollY-66,behavior:'smooth'}),30)};
+const pinEx=j=>{const el=document.getElementById('ex'+j);if(!el)return;const r=el.getBoundingClientRect(),top0=66,avail=innerHeight-top0,off=r.height>avail-16?top0+8:top0+(avail-r.height)/2,y=scrollY+r.top-off;setTimeout(()=>glide(y),30)};
 const alx=i=>{const a=mat(i),on=a.every(s=>s.ok);a.forEach(s=>s.ok=on?0:1);save();render();if(!on){const j=nextFrom(i);if(j>=0)pinEx(j)}};
 function info(i){const n=nm[i],t=TIP[n]||'Kontroluj ruch, pełny zakres, spokojne opuszczanie (2–3 s).',im=S.img&&S.img[n],u=encodeURIComponent(n+' technika wykonania'),b='style="background:var(--ln);color:inherit;text-decoration:none;cursor:pointer"';
  $('#md').innerHTML=`<div><div class=row><b class=sp>${esc(n)}</b><button onclick="$('#md').style.display='none'">✕</button></div><p>${esc(t)}</p>${im?`<img src="${im}" style="width:100%;border-radius:10px" onclick="this.classList.toggle('zoom')">`:''}<div class=row style="margin-top:10px;justify-content:flex-end"><a class=chip ${b} target=_blank rel=noopener href="https://www.google.com/search?tbm=isch&q=${u}">🔎 Zdjęcia</a><a class=chip ${b} target=_blank rel=noopener href="https://www.youtube.com/results?search_query=${u}">▶ Wideo</a></div></div>`;$('#md').style.display='flex'}
@@ -246,13 +247,13 @@ function vToday(){if(!N())return '<div class=card><b>Brak treningów</b><div cla
  if(q==3){const L=S.log[yd()],nx=(L.d+1)%N();h+=`<div class=card style="border-color:var(--ac)"><div class=mu>Wczoraj: Trening ${L.d+1} – ${esc(S.plan[L.d]?S.plan[L.d].n:'')} ✓</div><b>Czy wykonujemy Trening ${nx+1} – ${esc(S.plan[nx].n)}?</b><div class=row style="margin-top:10px"><button class=pri onclick="q3(1)">Tak</button><button onclick="q3(0)">Nie</button></div></div>`}
  if(q==4)h+=`<div class=card style="border-color:var(--ac)"><b>Który trening dziś robisz?</b><div class=row style="margin-top:10px">${S.plan.map((p,i)=>`<button class=chip style="background:${dc(i)};color:#fff" onclick="q4(${i})">T${i+1}</button>`).join('')}</div></div>`;
  let tot=0,dn=0;exs(e).forEach(x=>{const a=e&&e.ex[x.n]?e.ex[x.n].sets:def(x);tot+=a.length;dn+=a.filter(s=>s.ok).length});
- h+=`<div class=card><div class=mu>${new Date().toLocaleDateString('pl-PL',{weekday:'long',day:'numeric',month:'long'})}</div><div class=h1 style="color:${dc(vd)}">Trening ${vd+1}</div><div style="font-size:17px;font-weight:600;color:var(--mu);margin-top:2px">${esc(P.n)}</div>`;
+ h+=`<div class=card><div class=mu>${new Date().toLocaleDateString('pl-PL',{weekday:'long',day:'numeric',month:'long'})}</div><div class=h1 style="color:${dc(vd)}">Trening ${vd+1}</div><div style="font-size:17px;font-weight:600;color:var(--mu);margin-top:2px">${esc(P.n)}</div>${planList(P)}`;
  if(!e&&!chg)h+=`<div style="margin-top:8px"><button onclick="chg=1;render()">Zmień trening</button></div>`;
  if(!e&&chg)h+=`<div class=tg>${S.plan.map((p,i)=>`<button class="tt ${i==vd?'on':''}" onclick="vd=${i};chg=0;render()"><span>Trening ${i+1}</span>${i==S.cur?'<i class=dot></i>':''}<small>${esc(p.n)}</small></button>`).join('')}</div>`;
  h+=`<div class=bar><div style="width:${tot?dn/tot*100:0}%"></div></div><div class=mu>${dn}/${tot} serii</div></div>`;
  exs(e).forEach((x,i)=>{const ss=e&&e.ex[x.n]?e.ex[x.n].sets:def(x),al=ss.every(s=>s.ok),fs=x.n.length>38?13:x.n.length>28?14.5:16;
   h+=`<div class=card id=ex${i} style="border-left:4px solid ${gc(x.g)}"><div class=eh><div class=en><div class=eg style="color:${gc(x.g)}">${esc(x.g)}</div><b style="font-size:${fs}px">${esc(x.n)}</b><div class=mu>plan ${x.s}×${x.r}</div></div><button class=ib title="Jak wykonać" onclick="info(rg(${JSON.stringify(x.n).replace(/"/g,'&quot;')}))">i</button>${i>=P.e.length?`<button class="ib x" title="Usuń ćwiczenie" onclick="rx(${i})">✕</button>`:''}</div><div class=sw><button class="vb ${al?'on':''}" onclick="alx(${i})"><span class=vbt><span class=ck2>✓</span>wszystkie</span></button><div class=sl>`;
-  ss.forEach((s,j)=>h+=`<div class="set ${s.ok?'ok':''}"><b>${j+1}</b><div class=kgw><button class=pm title="Odejmij 2,5 kg" onclick="adj(${i},${j},-2.5)">−</button><label class=f><input type=number inputmode=decimal step=.5 placeholder=0 value="${s.w||''}" oninput="sv(${i},${j},'w',this.value)"><i>kg</i></label><button class=pm title="Dodaj 2,5 kg" onclick="adj(${i},${j},2.5)">+</button></div><div class=rpw><button class=pm title="Odejmij 1" onclick="adjr(${i},${j},-1)">−</button><label class=f><input type=number inputmode=numeric placeholder=0 value="${s.r}" oninput="sv(${i},${j},'r',this.value)"><i>powt.</i></label><button class=pm title="Dodaj 1" onclick="adjr(${i},${j},1)">+</button></div><button class=ck onclick="ck(${i},${j})">✓</button></div>`);
+  ss.forEach((s,j)=>h+=`<div class="set ${s.ok?'ok':''}"><b>${j+1}</b><div class=kgw><button class=pm title="Odejmij 2,5 kg" onclick="adj(${i},${j},-2.5)">−</button><label class=f><input type=number inputmode=decimal step=.5 placeholder=0 value="${s.w||''}" oninput="sv(${i},${j},'w',this.value);fitIn(this)"><i>kg</i></label><button class=pm title="Dodaj 2,5 kg" onclick="adj(${i},${j},2.5)">+</button></div><div class=rpw><button class=pm title="Odejmij 1" onclick="adjr(${i},${j},-1)">−</button><label class=f><input type=number inputmode=numeric placeholder=0 value="${s.r}" oninput="sv(${i},${j},'r',this.value);fitIn(this)"><i>powt.</i></label><button class=pm title="Dodaj 1" onclick="adjr(${i},${j},1)">+</button></div><button class=ck onclick="ck(${i},${j})">✓</button></div>`);
   h+='</div></div></div>'});
  h+=addCard();h+=`<button class="pri big" onclick="fin()">${e&&e.fin?'Trening zakończony ✓ (zapisz zmiany)':'Zakończ trening'}</button>`;
  if(e)h+=`<div style="text-align:center;margin-top:10px"><button onclick="undo()">Usuń dzisiejszy trening</button></div>`;
@@ -326,9 +327,9 @@ const W=Array(12).fill(0),Wt=Array(12).fill(0);
 
 function render(){
  $('#tabs').innerHTML=[['t','Dziś'],['c','Kalendarz'],['s','Statystyki']].map(([k,l])=>`<button class="tab ${tab==k?'on':''}" onclick="go('${k}')">${l}</button>`).join('');
- $('#v').innerHTML=tab=='t'?vToday():tab=='c'?vCal():vStats()}
+ $('#v').innerHTML=tab=='t'?vToday():tab=='c'?vCal():vStats();fitAll()}
 const sv2=()=>{save();render()};
-const go=k=>{tab=k;$('#sd').open=false;render();scrollTo({top:0,behavior:'smooth'})};
+const go=k=>{tab=k;$('#sd').open=false;render();glide(0)};
 let DL=null;(async()=>{try{const c=window.claude;DL=c?await c.use('downloads'):null}catch(e){DL=null}})();
 function statsExport(){
  const now=new Date(),wk=new Date(now.getFullYear(),now.getMonth(),now.getDate());wk.setDate(wk.getDate()-((now.getDay()+6)%7));
@@ -379,8 +380,8 @@ const fit=()=>{kbh();if(!fe||!vv)return;const r=fe.getBoundingClientRect(),top=v
 if(vv){vv.addEventListener('resize',()=>setTimeout(fit,60));vv.addEventListener('scroll',kbh)}
 document.addEventListener('focusin',e=>{if(isF(e.target.tagName)){fe=e.target;[80,350,800,1500,2500].forEach(t=>setTimeout(fit,t))}});
 document.addEventListener('focusout',()=>setTimeout(()=>{if(!isF((document.activeElement||{}).tagName))fe=null;kbh()},300));
-const sdEl=$('#sd');sdEl.querySelector('summary').addEventListener('click',()=>{const pin=()=>{if(!sdEl.open)return;scrollTo({top:sdEl.getBoundingClientRect().top+scrollY-66,behavior:'smooth'})};setTimeout(pin,30);setTimeout(pin,400)});
-$('#sb').addEventListener('click',e=>{const sm=e.target.closest('summary');if(!sm)return;const d=sm.parentElement;if(!d||!d.classList.contains('tr'))return;const pin=()=>{if(!d.open)return;scrollTo({top:d.getBoundingClientRect().top+scrollY-66,behavior:'smooth'})};setTimeout(pin,30);setTimeout(pin,400)});
+const sdEl=$('#sd');sdEl.querySelector('summary').addEventListener('click',()=>{const pin=()=>{if(!sdEl.open)return;glide(sdEl.getBoundingClientRect().top+scrollY-66)};setTimeout(pin,30);setTimeout(pin,400)});
+$('#sb').addEventListener('click',e=>{const sm=e.target.closest('summary');if(!sm)return;const d=sm.parentElement;if(!d||!d.classList.contains('tr'))return;const pin=()=>{if(!d.open)return;glide(d.getBoundingClientRect().top+scrollY-66)};setTimeout(pin,30);setTimeout(pin,400)});
 const GYMS_DEF=[
 {n:'Xtreme Fitness Białystok – Jaśminowa',a:'ul. Jaśminowa 58, 15-814 Białystok',p:'725 025 320',tel:'725025320',u:'https://www.xtremefitness.pl/kluby/XF_Bialystok',src:1,h:[['06:00','23:00'],['06:00','23:00'],['06:00','23:00'],['06:00','23:00'],['06:00','23:00'],['08:00','20:00'],['08:00','18:00']]},
 {n:'Xtreme Fitness Białystok – Andersa',a:'ul. Andersa, Białystok',h:Array(7).fill(null)},
@@ -430,7 +431,7 @@ function ginfo(i){const g=S.gyms[i],hh=gyH(i),di=dayIdx(new Date()),any=hh.some(
  </div>`;
  $('#md').style.display='flex'}
 const nextEx=()=>{const e=S.log[today()],L=exs(e);for(let i=0;i<L.length;i++){const x=L[i],ss=e&&e.ex[x.n]?e.ex[x.n].sets:def(x);if(!ss.every(t=>t.ok))return i}return -1};
-const pinNext=()=>{if(tab!='t')return;const k=nextEx();if(k<0)return;const el=document.getElementById('ex'+k);if(!el)return;scrollTo({top:el.getBoundingClientRect().top+scrollY-66,behavior:'smooth'})};
+const pinNext=()=>{if(tab!='t')return;const k=nextEx();if(k<0)return;const el=document.getElementById('ex'+k);if(!el)return;glide(el.getBoundingClientRect().top+scrollY-66)};
 if(!S.gyms){S.gyms=JSON.parse(JSON.stringify(GYMS_DEF));save()}
 let defPrompt=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();defPrompt=e});
@@ -442,8 +443,99 @@ async function instApp(){
  if(defPrompt){defPrompt.prompt();try{await defPrompt.userChoice}catch(e){}defPrompt=null;rs();return}
  alert('Zainstaluj ręcznie: w Chrome dotknij ⋮ (trzy kropki) w prawym górnym rogu i wybierz „Zainstaluj aplikację” lub „Dodaj do ekranu głównego”. Na iPhonie: Udostępnij → Dodaj do ekranu głównego.');
 }
+const MUS={};`Wyciskanie nad głowę – Smith|akton przedni naramiennego
+Unoszenie hantli bokiem siedząc|akton boczny naramiennego
+Unoszenie ramion w przód – wyciąg|akton przedni naramiennego
+Face pull – wyciąg|akton tylny naramiennego, rotatory
+Wyciskanie na maszynie – barki|akton przedni i boczny naramiennego
+Podciąganie do brody – wyciąg|akton boczny naramiennego, czworoboczny
+Odwodzenie w tył – maszyna (reverse fly)|akton tylny naramiennego
+Arnoldki|akton przedni i boczny naramiennego
+Wyciskanie hantli siedząc|akton przedni naramiennego
+Unoszenie hantli w przód|akton przedni naramiennego
+Odwodzenie hantli w opadzie tułowia|akton tylny naramiennego
+Uginanie ramion z hantlami|dwugłowy ramienia
+Uginanie ramion – wyciąg dolny|dwugłowy ramienia
+Uginanie na modlitewniku (preacher curl)|dwugłowy ramienia, głowa krótka
+Uginanie hantli na ławce skośnej|dwugłowy ramienia, głowa długa
+Uginanie młotkowe z hantlami|ramienny, ramienno-promieniowy
+Uginanie ze sztangą łamaną|dwugłowy ramienia
+Uginanie koncentryczne|dwugłowy ramienia, szczyt
+Prostowanie ramion – maszyna|trójgłowy ramienia
+Prostowanie ramion – wyciąg górny|trójgłowy ramienia, głowa boczna
+Wyciskanie wąskim chwytem – Smith|trójgłowy ramienia
+Prostowanie ramion z hantlem zza głowy|trójgłowy ramienia, głowa długa
+Wyciskanie francuskie leżąc|trójgłowy ramienia, głowa długa
+Dipy na poręczach|trójgłowy ramienia, piersiowy większy
+Prostowanie ramienia na wyciągu jednorącz|trójgłowy ramienia, głowa boczna
+Wyciskanie na maszynie – płasko|piersiowy większy, część mostkowa
+Wyciskanie na skosie – Smith|piersiowy większy, część obojczykowa
+Rozpiętki z hantlami|piersiowy większy, część mostkowa
+Wyciskanie na maszynie – skos dodatni|piersiowy większy, część obojczykowa
+Wyciskanie na maszynie – skos ujemny|piersiowy większy, część brzuszna
+Rozpiętki na maszynie (butterfly)|piersiowy większy, część mostkowa
+Wyciskanie hantli na skosie|piersiowy większy, część obojczykowa
+Wyciskanie sztangi leżąc|piersiowy większy, część mostkowa
+Rozpiętki na wyciągach (bramka)|piersiowy większy, część mostkowa
+Pompki|piersiowy większy, trójgłowy ramienia
+Ściąganie drążka do klatki (lat pulldown)|najszerszy grzbietu
+Ściąganie wyciągu jednorącz|najszerszy grzbietu
+Wiosłowanie na wyciągu siedząc|czworoboczny (środek), równoległoboczne
+Ściąganie jednorącz – maszyna|najszerszy grzbietu
+Ściąganie wąskim chwytem do klatki|najszerszy grzbietu, dolna część
+Ściąganie szerokim chwytem do klatki|najszerszy grzbietu, szerokość pleców
+Podciąganie na drążku|najszerszy grzbietu
+Wiosłowanie sztangą w opadzie|czworoboczny, równoległoboczne, najszerszy
+Wiosłowanie hantlem jednorącz|najszerszy grzbietu
+Pullover na wyciągu|najszerszy grzbietu
+Prostowanie tułowia na ławce rzymskiej|prostowniki grzbietu
+Dzień dobry (good morning)|prostowniki grzbietu, dwugłowy uda
+Martwy ciąg|prostowniki grzbietu, pośladkowy wielki
+Allahy na wyciągu|prosty brzucha
+Unoszenie nóg w zwisie|prosty brzucha, dolna część
+Spięcia brzucha – maszyna|prosty brzucha
+Plank (deska)|poprzeczny i prosty brzucha
+Skłony boczne z hantlem|skośne brzucha
+Spięcia brzucha na ławce skośnej|prosty brzucha
+Przysiad – Smith|czworogłowy uda
+Wypychanie na suwnicy (leg press)|czworogłowy uda
+Prostowanie nóg – maszyna|czworogłowy uda
+Uginanie nóg leżąc|dwugłowy uda
+Martwy ciąg rumuński|dwugłowy uda, pośladkowy wielki
+Wykroki z hantlami|czworogłowy uda, pośladkowy wielki
+Przysiad bułgarski|czworogłowy uda, pośladkowy wielki
+Hack squat|czworogłowy uda
+Szrugsy z hantlami|czworoboczny, część zstępująca
+Szrugsy – Smith|czworoboczny, część zstępująca
+Wspięcia na palce stojąc|trójgłowy łydki (brzuchaty)
+Wspięcia na palce siedząc|płaszczkowaty łydki
+Wspięcia na palce na suwnicy (leg press)|trójgłowy łydki
+Hip thrust ze sztangą|pośladkowy wielki
+Odwodzenie nogi na wyciągu|pośladkowy średni
+Odwodzenie nóg – maszyna|pośladkowy średni i mały
+Przysiad sumo|pośladkowy wielki, przywodziciele
+Uginanie nóg siedząc|dwugłowy uda
+Uginanie nóg stojąc|dwugłowy uda
+Martwy ciąg na prostych nogach|dwugłowy uda, pośladkowy wielki
+Przywodzenie nóg – maszyna|przywodziciele uda
+Uginanie nadgarstków podchwytem|zginacze nadgarstka
+Uginanie nadgarstków nachwytem|prostowniki nadgarstka
+Spacer farmera|przedramiona, chwyt
+Przysiad z hantlami|czworogłowy uda, pośladkowy wielki
+Martwy ciąg rumuński (RDL)|dwugłowy uda, pośladkowy wielki
+Kickback na wyciągu|pośladkowy wielki
+Step-up na ławkę|czworogłowy uda, pośladkowy wielki
+Wykroki – Smith|czworogłowy uda, pośladkowy wielki
+Ławka rzymska – kolana na boki|pośladkowy wielki i średni`.split('\n').forEach(l=>{const[a,b]=l.split('|');MUS[a]=b});
+const planList=P=>P.e.length?`<div style="margin-top:8px;border-top:1px solid var(--ln);padding-top:4px">${P.e.map(x=>`<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:1.5px 0;font-size:12px;line-height:1.3"><span style="min-width:0"><b style="color:${gc(x.g)}">${esc(x.g)}</b> - ${esc(x.n)}${MUS[x.n]?` <span class=mu style="font-size:11px">(${esc(MUS[x.n])})</span>`:''}</span><span class=mu style="white-space:nowrap;font-size:11px">${x.s} x ${x.r}</span></div>`).join('')}</div>`:'';
+let GR=0;
+function glide(y){cancelAnimationFrame(GR);const y0=scrollY,max=Math.max(0,document.documentElement.scrollHeight-innerHeight),t=Math.max(0,Math.min(max,y)),dist=t-y0;if(Math.abs(dist)<2)return;const T=Math.min(1000,520+Math.abs(dist)*0.22),t0=performance.now();const step=now=>{const k=Math.min(1,(now-t0)/T),e=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;scrollTo(0,y0+dist*e);if(k<1)GR=requestAnimationFrame(step)};GR=requestAnimationFrame(step)}
+['touchstart','wheel','mousedown'].forEach(ev=>addEventListener(ev,()=>cancelAnimationFrame(GR),{passive:true}));
+const fcv=document.createElement('canvas').getContext('2d');
+function fitIn(el){const cs=getComputedStyle(el),avail=el.clientWidth-(parseFloat(cs.paddingLeft)||0)-(parseFloat(cs.paddingRight)||0),t=String(el.value||'');let fs=18;fcv.font=`${cs.fontWeight} ${fs}px ${cs.fontFamily}`;while(t&&fcv.measureText(t).width>avail&&fs>9){fs-=1;fcv.font=`${cs.fontWeight} ${fs}px ${cs.fontFamily}`}el.style.fontSize=fs===18?'':fs+'px'}
+const fitAll=()=>document.querySelectorAll('.set input').forEach(fitIn);
 render();rs();
-setTimeout(pinNext,150);
+if('scrollRestoration' in history)history.scrollRestoration='manual';scrollTo(0,0);
 
 </script><script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}</script>
 </body></html>
