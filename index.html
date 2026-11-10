@@ -28,7 +28,7 @@ select{font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--
 .day i{font-style:normal;font-size:9px;font-weight:500}.td{outline:2px solid var(--ac)}.sel{box-shadow:0 0 0 2px var(--tx)}
 .hd{text-align:center;font-size:11px;color:var(--mu);font-style:normal}
 .tb{width:100%;border-collapse:collapse;margin-top:8px}.tb td,.tb th{padding:7px 2px;text-align:right;border-top:1px solid var(--ln);font-size:14px}.tb td:first-child,.tb th:first-child{text-align:left}
-details{background:var(--card);border:1px solid var(--ln);border-radius:16px;margin-top:20px}summary{padding:14px;font-weight:700;cursor:pointer}#sb{padding:0 12px 12px}
+details{background:var(--card);border:1px solid var(--ln);border-radius:16px;margin-top:20px}summary{padding:14px;font-weight:700;cursor:pointer}#sb,#pb{padding:0 12px 12px}
 .ex{display:grid;grid-template-columns:1fr 62px 62px 40px;gap:6px;margin-top:8px}.ex .nm{grid-column:1/4}
 .ln{padding:5px 0;border-top:1px solid var(--ln);font-size:14px}textarea{width:100%;height:70px;background:var(--bg);color:var(--tx);border:1px solid var(--ln);border-radius:9px}
 .eh{display:flex;align-items:flex-start;gap:8px}.en{flex:1;min-width:0;overflow-wrap:anywhere;line-height:1.25}.eg{font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
@@ -44,7 +44,7 @@ select{appearance:none;-webkit-appearance:none;padding-right:30px!important;back
 .tr>summary{list-style:none}.tr>summary::-webkit-details-marker{display:none}
 .tr>summary::after{content:"";flex:none;margin-left:auto;margin-right:4px;width:8px;height:8px;border-right:2px solid #339af0;border-bottom:2px solid #339af0;transform:translateY(-2px) rotate(45deg);transition:transform .2s}
 .tr[open]>summary::after{transform:translateY(2px) rotate(225deg)}
-#sd{scroll-margin-top:72px}
+#sd,#pd{scroll-margin-top:72px}
 .tg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:10px}
 .tt{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:6px;padding:11px 2px 8px;min-height:58px;border-radius:12px;background:var(--ln);color:var(--tx);text-align:center;line-height:1.15;min-width:0}
 .tt span{font-size:14px;font-weight:600;white-space:nowrap}
@@ -77,7 +77,8 @@ select{appearance:none;-webkit-appearance:none;padding-right:30px!important;back
 </head><body>
 <div id="tabs"></div><div id="md" onclick="if(event.target==this)this.style.display='none'"></div>
 <main><div id="v"></div>
-<details id="sd"><summary>⚙️ Ustawienia i edycja planu</summary><div id="sb"></div></details></main>
+<details id="pd"><summary>💪 Edycja planu treningowego</summary><div id="pb"></div></details>
+<details id="sd"><summary>⚙️ Ustawienia</summary><div id="sb"></div></details></main>
 <script>
 const K='gym_v1',$=s=>document.querySelector(s);
 const DEF=[["Barki + Biceps + Triceps","Barki|Smith;Barki|Wzniosy siedząc;Barki|Wyciąg podnoszenie przed sobą;Barki|Wyciąg tył barków;Biceps|Hantle uginanie;Biceps|Wyciąg ściąganie;Triceps|Maszyna wyprosty;Triceps|Wyciąg przed sobą"],
@@ -199,6 +200,12 @@ Klata|Pompki|Ciało w linii, łokcie ok. 45° od tułowia.
 Plecy|Podciąganie na drążku|Ciągnij łokcie w dół, broda nad drążek.
 Plecy|Wiosłowanie sztangą w opadzie|Plecy proste, ciągnij do pasa.
 Plecy|Wiosłowanie hantlem jednorącz|Ręka oparta o ławkę, ciągnij łokieć do biodra.
+Plecy|Prostopadłe przyciąganie drążka wyciągu górnego do bioder|Ciągnij drążek prostopadle w dół do bioder, łopatki ściągnięte, wracaj powoli.
+Biceps|Uginanie na modlitewniku z hantlem|Ramię oparte na pulpicie, uginaj jednorącz, wolno opuszczaj prawie do pełnego wyprostu.
+Biceps|Uginanie na modlitewniku ze sztangą|Ramiona na pulpicie, bez bujania, wolno opuszczaj prawie do pełnego wyprostu.
+Biceps|Uginanie ramion – wyciąg górny|Łokcie nieruchomo na wysokości barków, uginaj w stronę głowy, na szczycie napnij biceps.
+Triceps|Dipy na maszynie siedząc|Tułów pionowo, łokcie blisko ciała, prostuj ramiona do końca, wolny powrót.
+Biceps|Jednoręczne uginanie ramienia z hantlem w oparciu o ławkę|Ramię stabilnie oparte o ławkę, pełny zakres, bez bujania tułowiem.
 Plecy|Pullover na wyciągu|Ramiona proste, ruch z barków do bioder.`.split('\n').forEach(l=>{let[g,n,t]=l.split('|');g=GM[g]||g;if(!LIB[g])LIB[g]=[];LIB[g].push(n);TIP[n]=t});
 LIB.Cardio=['Bieżnia','Orbitrek','Rower stacjonarny','Rower w plenerze','Skakanka','Spacer','Wioślarz'];
 Object.assign(TIP,{'Bieżnia':'Klasyczny wybór. Pozwala na marsz, szybki marsz pod górę (np. metoda 12-5-3) lub bieg. Dobrze spala kalorie i łatwo na niej kontrolować prędkość oraz nachylenie.',
@@ -254,7 +261,7 @@ const mk=(k,d)=>{const l=vkeys().pop()||'';S.log[k]=full(d);if(k>=l)S.cur=(d+1)%
 const del=k=>{delete S.log[k];save();render()};
 const cmv=d=>{cm=new Date(cm.getFullYear(),cm.getMonth()+d,1);render()};
 
-function vToday(){if(!N())return '<div class=card><b>Brak treningów</b><div class=mu style="margin-top:6px">Dodaj trening w „Ustawienia i edycja planu” albo zaimportuj kopię danych.</div><button class=pri style="margin-top:10px" onclick="$(\'#sd\').open=true;scrollTo({top:document.body.scrollHeight,behavior:\'smooth\'})">Otwórz Ustawienia</button></div>';
+function vToday(){if(!N())return '<div class=card><b>Brak treningów</b><div class=mu style="margin-top:6px">Dodaj trening w „Edycja planu treningowego” albo zaimportuj kopię danych (Ustawienia).</div><button class=pri style="margin-top:10px" onclick="$(\'#pd\').open=true;scrollTo({top:document.body.scrollHeight,behavior:\'smooth\'})">Otwórz edycję planu</button></div>';
  const e=S.log[today()];if(e)vd=e.d;if(vd>=N())vd=0;const P=S.plan[vd];let h='';
  if(q==1)h+=`<div class=card style="border-color:var(--ac)"><b>Czy wczoraj był trening: Trening ${S.cur+1} – ${esc(S.plan[S.cur].n)}?</b><div class=row style="margin-top:10px"><button class=pri onclick="q1(1)">Tak</button><button onclick="q1(0)">Nie</button></div></div>`;
  if(q==2)h+=`<div class=card style="border-color:var(--ac)"><div class=mu>✓ Wczorajszy trening zapisany w kalendarzu</div><b>Czy przejść do kolejnego treningu (Trening ${(S.cur+1)%N()+1})?</b><div class=row style="margin-top:10px"><button class=pri onclick="q2(1)">Tak</button><button onclick="q2(0)">Nie</button></div></div>`;
@@ -284,7 +291,7 @@ function vCal(){
   if(valid(e)){h+=`<div class=mu>Trening ${e.d+1}${S.plan[e.d]?' · '+esc(S.plan[e.d].n):''}</div>`;if(e.st)h+=`<div class=mu style="margin-top:2px">${hm(e.st)}${e.en?' – '+hm(e.en)+' · '+Math.max(1,Math.round((e.en-e.st)/6e4))+' min':' (trwa / nie zakończony)'}</div>`;
    for(const[n,x]of Object.entries(e.ex)){const o=x.sets.filter(s=>s.ok);if(o.length)h+=`<div class=ln><span style="color:${gc(x.g)}">●</span> <b>${esc(n)}</b><div class=mu>${o.map(s=>s.r+(+s.w?`<sup>${s.w}</sup>`:'')).join(' · ')}</div></div>`}
    h+=`<div style="margin-top:10px"><button onclick="del('${cs}')">Usuń trening</button></div>`}
-  else if(cs<=today())h+=`<div class=mu style="margin:6px 0">${S.plan.length?'Brak treningu. Oznacz jako wykonany:':'Brak treningu. Najpierw dodaj trening w Ustawieniach.'}</div><div class=tg>${S.plan.map((p,i)=>`<button class=tt onclick="mk('${cs}',${i})"><span>Trening ${i+1}</span><small>${esc(p.n)}</small></button>`).join('')}<button class="tt ${cf?'on':''}" onclick="cf=cf?0:1;render()"><span>Cardio</span><small>czas</small></button></div>`;
+  else if(cs<=today())h+=`<div class=mu style="margin:6px 0">${S.plan.length?'Brak treningu. Oznacz jako wykonany:':'Brak treningu. Najpierw dodaj trening w edycji planu treningowego.'}</div><div class=tg>${S.plan.map((p,i)=>`<button class=tt onclick="mk('${cs}',${i})"><span>Trening ${i+1}</span><small>${esc(p.n)}</small></button>`).join('')}<button class="tt ${cf?'on':''}" onclick="cf=cf?0:1;render()"><span>Cardio</span><small>czas</small></button></div>`;
   else h+='<div class=mu>Przyszły dzień.</div>';
   if(cs<=today())h+=cardioBlock(cs);
   h+='</div>';h+=gymCard()}
@@ -393,7 +400,7 @@ function render(){
  $('#tabs').innerHTML=[['t','Dziś'],['c','Kalendarz'],['s','Statystyki']].map(([k,l])=>`<button class="tab ${tab==k?'on':''}" onclick="go('${k}')">${l}</button>`).join('');
  $('#v').innerHTML=tab=='t'?vToday():tab=='c'?vCal():vStats();fitAll()}
 const sv2=()=>{save();render()};
-const go=k=>{tab=k;cf=0;$('#sd').open=false;render();glide(0)};
+const go=k=>{tab=k;cf=0;$('#pd').open=false;$('#sd').open=false;render();glide(0)};
 let DL=null;(async()=>{try{const c=window.claude;DL=c?await c.use('downloads'):null}catch(e){DL=null}})();
 function statsExport(){
  const now=new Date(),wk=new Date(now.getFullYear(),now.getMonth(),now.getDate());wk.setDate(wk.getDate()-((now.getDay()+6)%7));
@@ -436,7 +443,7 @@ function rs(){
   h+='<div class=mu style="padding:8px 0 2px"><b>Rozgrzewka</b> – zawsze na początku treningu (dodawana automatycznie)</div>';
   p.e.forEach((x,i)=>h+=`<div class=ex><select class=a onchange="eg(${d},${i},this.value)">${gopts(x.g)}</select><input class="a own" placeholder="…lub wpisz własną nazwę" class=own onchange="if(this.value.trim())eg(${d},${i},this.value.trim())"><select class=a onchange="en(${d},${i},this.value)">${eopts(x.g,x.n)}</select><input class="a own" placeholder="…lub wpisz własną nazwę" class=own onchange="if(this.value.trim())en(${d},${i},this.value.trim())">${x.g==='Cardio'?`<span class=mu>czas (min)</span><input type=number inputmode=numeric value="${x.r}" title="Minuty" onchange="ed(${d},${i},'r',this.value)"><span></span>`:`<span class=mu>serie × powt.</span><input type=number inputmode=numeric value="${x.s}" title="Serie" onchange="ed(${d},${i},'s',this.value)"><input type=number inputmode=numeric value="${x.r}" title="Powtórzenia" onchange="ed(${d},${i},'r',this.value)">`}<button class="ib x" title="Usuń" onclick="de(${d},${i})">✕</button></div>`);
   h+=addForm(d)+'</div></details>'});
- h+=`<button class=pri onclick="ad()">+ Nowy trening</button><div class=card style="margin-top:14px"><b>Dane</b><div class=mu style="margin-top:4px">${dinfo()}</div><div class=row style="margin-top:8px"><button onclick="exp()">Eksport</button><button onclick="$('#fi').click()">Import</button><input id=fi type=file accept=".json,application/json" hidden onchange="imp(this)"><button onclick="if(rz){S={plan:[],log:{},cur:0,asked:'',gyms:[],v:5};save();location.reload()}else{rz=1;rs()}">${rz?'Na pewno? Kliknij ponownie':'Zeruj wszystko'}</button></div></div>`;
+ h+=`<button class=pri onclick="ad()">+ Nowy trening</button>`;$('#pb').innerHTML=h;h=`<div class=card style="margin-top:0"><b>Dane</b><div class=mu style="margin-top:4px">${dinfo()}</div><div class=row style="margin-top:8px"><button onclick="exp()">Eksport</button><button onclick="$('#fi').click()">Import</button><input id=fi type=file accept=".json,application/json" hidden onchange="imp(this)"><button onclick="if(rz){S={plan:[],log:{},cur:0,asked:'',gyms:[],v:5};save();location.reload()}else{rz=1;rs()}">${rz?'Na pewno? Kliknij ponownie':'Zeruj wszystko'}</button></div></div>`;
  h+=installCard();$('#sb').innerHTML=h}
 const vv=window.visualViewport;let fe=null;const isF=t=>/^(INPUT|SELECT|TEXTAREA)$/.test(t||'');
 const kbh=()=>{const h=vv?Math.max(0,window.innerHeight-vv.height-vv.offsetTop):0;document.documentElement.style.setProperty('--kb',Math.round(h)+'px');return h};
@@ -445,8 +452,8 @@ const fit=()=>{kbh();if(!fe||!vv)return;const r=fe.getBoundingClientRect(),top=v
 if(vv){vv.addEventListener('resize',()=>setTimeout(fit,60));vv.addEventListener('scroll',kbh)}
 document.addEventListener('focusin',e=>{if(isF(e.target.tagName)){fe=e.target;[80,350,800,1500,2500].forEach(t=>setTimeout(fit,t))}});
 document.addEventListener('focusout',()=>setTimeout(()=>{if(!isF((document.activeElement||{}).tagName))fe=null;kbh()},300));
-const sdEl=$('#sd');sdEl.querySelector('summary').addEventListener('click',()=>{const pin=()=>{if(!sdEl.open)return;glide(sdEl.getBoundingClientRect().top+scrollY-66)};setTimeout(pin,30);setTimeout(pin,400)});
-$('#sb').addEventListener('click',e=>{const sm=e.target.closest('summary');if(!sm)return;const d=sm.parentElement;if(!d||!d.classList.contains('tr'))return;const pin=()=>{if(!d.open)return;glide(d.getBoundingClientRect().top+scrollY-66)};setTimeout(pin,30);setTimeout(pin,400)});
+[$('#pd'),$('#sd')].forEach(el=>el.querySelector('summary').addEventListener('click',()=>{const pin=()=>{if(!el.open)return;glide(el.getBoundingClientRect().top+scrollY-66)};setTimeout(pin,30);setTimeout(pin,400)}));
+$('#pb').addEventListener('click',e=>{const sm=e.target.closest('summary');if(!sm)return;const d=sm.parentElement;if(!d||!d.classList.contains('tr'))return;const pin=()=>{if(!d.open)return;glide(d.getBoundingClientRect().top+scrollY-66)};setTimeout(pin,30);setTimeout(pin,400)});
 const GYMS_DEF=[
 {n:'Xtreme Fitness Białystok – Jaśminowa',a:'ul. Jaśminowa 58, 15-814 Białystok',p:'725 025 320',tel:'725025320',u:'https://www.xtremefitness.pl/kluby/XF_Bialystok',src:1,h:[['06:00','23:00'],['06:00','23:00'],['06:00','23:00'],['06:00','23:00'],['06:00','23:00'],['08:00','20:00'],['08:00','18:00']]},
 {n:'Xtreme Fitness Białystok – Andersa',a:'ul. Andersa, Białystok',h:Array(7).fill(null)},
