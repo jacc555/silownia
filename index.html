@@ -336,7 +336,7 @@ const full=d=>{const ex={};S.plan[d].e.forEach(x=>{if(x.g==='Cardio')return;ex[x
 const ent=()=>{const t=today(),e=S.log[t]||(S.log[t]={d:vd,fin:0,ex:{}});if(!e.st&&!e.fin)e.st=Date.now();return e};const strt=()=>{ent();save();render()};
 function mat(i){const e=ent(),x=exs(e)[i];if(!e.ex[x.n])e.ex[x.n]={g:x.g,sets:def(x)};return e.ex[x.n].sets}
 const sv=(i,j,f,v)=>{mat(i)[j][f]=v;save();rclk()};const rclk=()=>{const el=document.getElementById('clk');if(el)el.innerHTML=clkCard(S.log[today()])};
-const adj=(i,j,d)=>{const s=mat(i)[j];s.w=Math.max(0,Math.round(((parseFloat(s.w)||0)+d)*10)/10);afill(i,j);save();render()};
+const adj=(i,j,d)=>{const s=mat(i)[j];s.w=Math.max(0,Math.round(((parseFloat(s.w)||0)+d)*10)/10);save();render()};
 const adjr=(i,j,d)=>{const s=mat(i)[j];s.r=Math.max(0,(parseInt(s.r)||0)+d);save();render()};
 const ck=(i,j)=>{const s=mat(i)[j];s.ok=s.ok?0:1;if(s.ok){const e=ent();if(!e.st&&!e.fin)e.st=Date.now();afill(i,j)}save();render();if(s.ok){tick(i,[j],14);restStart()}};
 const ns=(i,d)=>{const a=mat(i);if(d>0)a.push({...a[a.length-1],ok:0});else if(a.length>1)a.pop();save();render()};
