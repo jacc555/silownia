@@ -18,7 +18,19 @@ input{font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--l
 select{font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--ln);border-radius:9px;padding:9px;width:100%}
 .mu{color:var(--mu);font-size:13px}.h1{font-size:24px;font-weight:700}.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.sp{flex:1}
 .chip{padding:7px 14px;border-radius:99px}.chip.on{background:var(--ac);color:#fff}
-.tab{flex:1;padding:10px;border-radius:12px;font-weight:600}.tab.on{background:var(--tx);color:var(--bg)}
+.tab{flex:1;padding:6px 10px;border-radius:12px;font-weight:600;font-size:15px;letter-spacing:.03em;font-family:ui-rounded,"SF Pro Rounded","Avenir Next","Segoe UI Variable Display","Segoe UI",system-ui,sans-serif;transition:transform .18s cubic-bezier(.2,1.4,.4,1),opacity .25s,color .25s}
+.tab:active{transform:scale(.93)}
+.tab.on{background:var(--tx);color:var(--bg)}
+.tab:not(.on){color:var(--mu);opacity:.6}
+.tab.tfx{animation:tabpop .42s cubic-bezier(.2,1.5,.4,1)}
+@keyframes tabpop{0%{transform:scale(.88)}55%{transform:scale(1.07)}100%{transform:scale(1)}}
+@keyframes shk{0%,100%{transform:translateX(0)}15%{transform:translateX(-5px)}30%{transform:translateX(5px)}45%{transform:translateX(-4px)}60%{transform:translateX(3px)}75%{transform:translateX(-2px)}}
+.shk{animation:shk .42s cubic-bezier(.36,.07,.19,.97) both}
+.set.smoke{position:relative;pointer-events:none;animation:smk .6s cubic-bezier(.3,.6,.4,1) both}
+.set.smoke::after{content:"";position:absolute;inset:-8px -4px;pointer-events:none;opacity:0;filter:blur(7px);background:radial-gradient(circle at 18% 60%,rgba(150,158,170,.6) 0,transparent 42%),radial-gradient(circle at 50% 35%,rgba(150,158,170,.5) 0,transparent 46%),radial-gradient(circle at 82% 62%,rgba(150,158,170,.55) 0,transparent 42%);animation:puff .6s ease-out both}
+.set.gone{overflow:hidden;transition:height .34s ease,margin-top .34s ease}
+@keyframes smk{0%{opacity:1;filter:blur(0);transform:none}100%{opacity:0;filter:blur(9px);transform:translateY(-12px) scale(1.14)}}
+@keyframes puff{0%{opacity:0;transform:scale(.6)}35%{opacity:.9}100%{opacity:0;transform:translateY(-18px) scale(1.4)}}
 .set{display:flex;gap:8px;align-items:center;margin-top:10px}.set b{margin-left:-4px;width:16px;color:var(--mu);font-size:13px;text-align:center}
 #md{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:20;padding:16px}#md>div{background:var(--card);border-radius:16px;max-width:520px;width:100%;max-height:90vh;overflow:auto;padding:14px}.zoom{position:fixed;inset:0;width:100%!important;height:100%;object-fit:contain;background:#000;z-index:30;border-radius:0!important}
 .set i{font-style:normal;color:var(--mu);font-size:9px}.set.ok .f{border-color:var(--ok)}.set.ok .ck{background:var(--ok);color:#fff}.ck{width:38px;height:38px;padding:0;flex:none;font-size:18px}
@@ -335,10 +347,16 @@ const def=x=>{const L=lastS(x.n);return Array.from({length:x.s},(_,i)=>{const p=
 const full=d=>{const ex={};S.plan[d].e.forEach(x=>{if(x.g==='Cardio')return;ex[x.n]={g:x.g,sets:Array.from({length:x.s},()=>({w:0,r:x.r,ok:1}))}});return{d,fin:1,ex}};
 const ent=()=>{const t=today(),e=S.log[t]||(S.log[t]={d:vd,fin:0,ex:{}});if(!e.st&&!e.fin)e.st=Date.now();return e};const strt=()=>{ent();save();render()};
 function mat(i){const e=ent(),x=exs(e)[i];if(!e.ex[x.n])e.ex[x.n]={g:x.g,sets:def(x)};return e.ex[x.n].sets}
-const sv=(i,j,f,v)=>{mat(i)[j][f]=v;save();rclk()};const rclk=()=>{const el=document.getElementById('clk');if(el)el.innerHTML=clkCard(S.log[today()])};
-const adj=(i,j,d)=>{const s=mat(i)[j];s.w=Math.max(0,Math.round(((parseFloat(s.w)||0)+d)*10)/10);save();render()};
-const adjr=(i,j,d)=>{const s=mat(i)[j];s.r=Math.max(0,(parseInt(s.r)||0)+d);save();render()};
-const ck=(i,j)=>{const s=mat(i)[j];s.ok=s.ok?0:1;if(s.ok){const e=ent();if(!e.st&&!e.fin)e.st=Date.now();afill(i,j)}save();render();if(s.ok){tick(i,[j],14);if(mat(i).every(x=>x.ok))restStop();else restStart()}};
+const sv=(i,j,f,v)=>{const s=mat(i)[j];if(s.ok)return;s[f]=v;save();rclk()};const rclk=()=>{const el=document.getElementById('clk');if(el)el.innerHTML=clkCard(S.log[today()])};
+const adj=(i,j,d)=>{const s=mat(i)[j];if(s.ok)return;s.w=Math.max(0,Math.round(((parseFloat(s.w)||0)+d)*10)/10);save();render()};
+const adjr=(i,j,d)=>{const s=mat(i)[j];if(s.ok)return;s.r=Math.max(0,(parseInt(s.r)||0)+d);save();render()};
+const ck=(i,j)=>{const s=mat(i)[j];if(smBusy)return;if(!s.ok&&!(+s.r>0)&&!(parseFloat(s.w)>0))return smoke(i,j);s.ok=s.ok?0:1;if(s.ok){const e=ent();if(!e.st&&!e.fin)e.st=Date.now();afill(i,j)}save();render();if(s.ok){tick(i,[j],14);if(mat(i).every(x=>x.ok))restStop();else restStart()}};
+let smBusy=0;
+function smoke(i,j){if(smBusy)return;const a=mat(i),r=document.querySelectorAll('#ex'+i+' .set')[j];
+ if(a.length<2||!r){if(r){r.classList.remove('shk');void r.offsetWidth;r.classList.add('shk');setTimeout(()=>r.classList.remove('shk'),460)}return}
+ smBusy=1;r.classList.add('smoke');
+ setTimeout(()=>{r.style.height=r.offsetHeight+'px';void r.offsetHeight;r.classList.add('gone');r.style.height='0px';r.style.marginTop='0px'},560);
+ setTimeout(()=>{smBusy=0;a.splice(j,1);save();render();if(a.length&&a.every(x=>x.ok))restStop()},920)}
 const ns=(i,d)=>{const a=mat(i);if(d>0)a.push({...a[a.length-1],ok:0});else if(a.length>1)a.pop();save();render()};
 const fin=()=>{const e=ent(),first=!e.fin;if(first){e.fin=1;e.en=Date.now();S.cur=(e.d+1)%N()}save();render();if(first){try{restStop()}catch(x){}finFx(e)}};
 const undo=()=>{const t=today(),e=S.log[t];if(e&&e.fin)S.cur=e.d;delete S.log[t];vd=S.cur;save();render()};
@@ -363,7 +381,7 @@ function vToday(){if(!N())return '<div class=card><b>Brak treningów</b><div cla
  h+=`<div id=clk>${clkCard(e)}</div>`+wuCard(e);
  exs(e).forEach((x,i)=>{if(x.g==='Cardio'){h+=cpCard(x,i,P);return}const ss=e&&e.ex[x.n]?e.ex[x.n].sets:def(x),al=ss.every(s=>s.ok),fs=x.n.length>38?13:x.n.length>28?14.5:16;
   h+=`<div class=card id=ex${i} style="border-left:4px solid ${gc(x.g)}"><div class=eh><div class=en><div class=eg style="color:${gc(x.g)}">${esc(x.g)}</div><b style="font-size:${fs}px">${esc(x.n)}</b></div><button class=ib title="Jak wykonać" onclick="info(rg(${JSON.stringify(x.n).replace(/"/g,'&quot;')}))">i</button>${i>=P.e.length?`<button class="ib x" title="Usuń ćwiczenie" onclick="rx(${i})">✕</button>`:''}</div>${planRow(x,e)}<div class=sw><button class="vb ${al?'on':''}" onclick="alx(${i})"><span class=vbt><span class=ck2>✓</span>wszystkie</span></button><div class=sl>`;
-  ss.forEach((s,j)=>h+=`<div class="set ${s.ok?'ok':''}"><b>${j+1}</b><div class=kgw><button class=pm title="Odejmij 2,5 kg" onclick="adj(${i},${j},-2.5)">−</button><label class=f><input type=number inputmode=decimal step=.5 placeholder=0 value="${s.w||''}" oninput="sv(${i},${j},'w',this.value);fitIn(this)"><i>kg</i></label><button class=pm title="Dodaj 2,5 kg" onclick="adj(${i},${j},2.5)">+</button></div><div class=rpw><button class=pm title="Odejmij 1" onclick="adjr(${i},${j},-1)">−</button><label class=f><input type=number inputmode=numeric placeholder=0 value="${s.r}" oninput="sv(${i},${j},'r',this.value);fitIn(this)"><i>powt.</i></label><button class=pm title="Dodaj 1" onclick="adjr(${i},${j},1)">+</button></div><button class=ck onclick="ck(${i},${j})">✓</button></div>`);
+  ss.forEach((s,j)=>h+=`<div class="set ${s.ok?'ok':''}"><b>${j+1}</b><div class=kgw><button class=pm title="Odejmij 2,5 kg" onclick="adj(${i},${j},-2.5)">−</button><label class=f><input type=number inputmode=decimal step=.5 placeholder=0 value="${s.w||''}"${s.ok?' readonly':''} oninput="sv(${i},${j},'w',this.value);fitIn(this)"><i>kg</i></label><button class=pm title="Dodaj 2,5 kg" onclick="adj(${i},${j},2.5)">+</button></div><div class=rpw><button class=pm title="Odejmij 1" onclick="adjr(${i},${j},-1)">−</button><label class=f><input type=number inputmode=numeric placeholder=0 value="${s.r}"${s.ok?' readonly':''} oninput="sv(${i},${j},'r',this.value);fitIn(this)"><i>powt.</i></label><button class=pm title="Dodaj 1" onclick="adjr(${i},${j},1)">+</button></div><button class=ck onclick="ck(${i},${j})">✓</button></div>`);
   h+='</div></div></div>'});
  h+=addCard();h+=cardioToday();h+=`<button class="pri big" onclick="finGo(this)">${e&&e.fin?'Trening zakończony ✓':'Zakończ trening'}</button>`;
  if(e)h+=`<div style="text-align:center;margin-top:10px"><button onclick="undo()">Usuń dzisiejszy trening</button></div>`;
@@ -488,7 +506,8 @@ function render(){
  $('#tabs').innerHTML=[['t','Dziś'],['c','Kalendarz'],['s','Statystyki']].map(([k,l])=>`<button class="tab ${tab==k?'on':''}" onclick="go('${k}')">${l}</button>`).join('');
  $('#v').innerHTML=(tab=='t'?bkBanner():'')+(tab=='t'?vToday():tab=='c'?vCal():vStats());fitAll();pbar()}
 const sv2=()=>{save();render()};
-const go=k=>{tab=k;cf=0;$('#pd').open=false;$('#sd').open=false;render();glide(0);const v=$('#v');v.classList.remove('vin');void v.offsetWidth;v.classList.add('vin')};
+const go=k=>{tab=k;cf=0;$('#pd').open=false;$('#sd').open=false;render();glide(0);const v=$('#v');v.classList.remove('vin');void v.offsetWidth;v.classList.add('vin');const tb=document.querySelector('#tabs .tab.on');if(tb){tb.classList.add('tfx');setTimeout(()=>tb.classList.remove('tfx'),460)}};
+document.addEventListener('click',e=>{const w=e.target.closest&&e.target.closest('.set.ok .kgw,.set.ok .rpw');if(!w)return;w.classList.remove('shk');void w.offsetWidth;w.classList.add('shk');setTimeout(()=>w.classList.remove('shk'),460);try{if(navigator.vibrate)navigator.vibrate(12)}catch(x){}},true);
 let DL=null;(async()=>{try{const c=window.claude;DL=c?await c.use('downloads'):null}catch(e){DL=null}})();
 function statsExport(){
  const now=new Date(),wk=new Date(now.getFullYear(),now.getMonth(),now.getDate());wk.setDate(wk.getDate()-((now.getDay()+6)%7));
