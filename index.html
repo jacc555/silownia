@@ -716,21 +716,37 @@ function recSet(n){const t=today();let w=0,r=0;for(const[k,e]of Object.entries(S
 function planRow(x,e){const o=recSet(x.n),rt=o?'Rekord – '+(o.w>0?f1(o.w)+' kg × '+o.r:o.r+' powt.'):'',rm=recMax(x.n),tm=topW(e,x.n),
  nr=rm>0&&tm>rm?'<div style="text-align:right;font-size:12px;font-weight:700;color:var(--ok);margin-top:2px">🏆 Nowy rekord '+f1(tm)+' kg</div>':'';
  return '<div class=mu style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-top:2px;line-height:1.25;font-size:11px"><span>plan '+x.s+'×'+x.r+'</span><span style="text-align:right">'+rt+'</span></div>'+nr}
-function afill(i,j){const a=mat(i),w=a[j].w;if(!(parseFloat(w)>0))return;for(let k=j+1;k<a.length;k++)if(!a[k].ok&&!(parseFloat(a[k].w)>0))a[k].w=w}
+function afill(i,j){const a=mat(i),w=a[j].w;if(!(parseFloat(w)>0))return;for(let k=j+1;k<a.length;k++)if(!a[k].ok)a[k].w=w}
 let AC=null;
 function audioUnlock(){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;AC=AC||new C();if(AC.state==='suspended')AC.resume()}catch(e){}}
 ['touchstart','pointerdown','keydown'].forEach(ev=>addEventListener(ev,audioUnlock,{passive:true}));
 function chime(){try{audioUnlock();if(!AC)return;const t0=AC.currentTime+.03,seq=[[659.25,0],[783.99,.15],[1046.5,.3],[1318.51,.45],[1046.5,.85],[1318.51,1],[1567.98,1.15]];
  seq.forEach(([f,d])=>{const o=AC.createOscillator(),o2=AC.createOscillator(),g=AC.createGain(),g2=AC.createGain();o.type='sine';o2.type='triangle';o.frequency.value=f;o2.frequency.value=f*2;g2.gain.value=.12;o2.connect(g2);g2.connect(g);o.connect(g);g.connect(AC.destination);g.gain.setValueAtTime(.0001,t0+d);g.gain.exponentialRampToValueAtTime(.3,t0+d+.025);g.gain.exponentialRampToValueAtTime(.0001,t0+d+.6);o.start(t0+d);o2.start(t0+d);o.stop(t0+d+.65);o2.stop(t0+d+.65)})}catch(e){}}
-const RT={end:0,tot:0,iv:0,hid:0};
+const RT={end:0,tot:0,iv:0,hid:0,fired:0,aok:0,au:null,url:''};
+const CHIME=[[659.25,0],[783.99,.15],[1046.5,.3],[1318.51,.45],[1046.5,.85],[1318.51,1],[1567.98,1.15]];
+function rtWav(sec,snd){const sr=11025,n0=Math.max(1,Math.round(sec*sr)),n=n0+Math.round(2.2*sr),a=new Int16Array(n);
+ if(snd)CHIME.forEach(([f,d])=>{const st=n0+Math.round(d*sr),len=Math.round(.65*sr);for(let i=0;i<len&&st+i<n;i++){const t=i/sr,env=t<.025?.3*t/.025:.3*Math.exp(Math.log(.0001/.3)*(t-.025)/.575),v=env*(Math.sin(2*Math.PI*f*t)+.12*Math.sin(4*Math.PI*f*t));a[st+i]=Math.max(-32767,Math.min(32767,a[st+i]+v*20000))}});
+ const b=new ArrayBuffer(44+n*2),d=new DataView(b),w=(o,t)=>{for(let i=0;i<t.length;i++)d.setUint8(o+i,t.charCodeAt(i))};
+ w(0,'RIFF');d.setUint32(4,36+n*2,true);w(8,'WAVE');w(12,'fmt ');d.setUint32(16,16,true);d.setUint16(20,1,true);d.setUint16(22,1,true);d.setUint32(24,sr,true);d.setUint32(28,sr*2,true);d.setUint16(32,2,true);d.setUint16(34,16,true);w(36,'data');d.setUint32(40,n*2,true);
+ new Int16Array(b,44).set(a);return new Blob([b],{type:'audio/wav'})}
+function rtAudio(){try{const left=(RT.end-Date.now())/1000;if(left<=0)return;if(!RT.au){RT.au=new Audio();RT.au.preload='auto';RT.au.setAttribute('playsinline','');RT.au.addEventListener('ended',()=>{RT.aok=0})}
+ const u=URL.createObjectURL(rtWav(left,!S.rest||S.rest.snd!==0));RT.au.src=u;if(RT.url)URL.revokeObjectURL(RT.url);RT.url=u;RT.aok=0;
+ const pr=RT.au.play();if(pr&&pr.then)pr.then(()=>{RT.aok=1}).catch(()=>{RT.aok=0});
+ if('mediaSession' in navigator){navigator.mediaSession.metadata=new MediaMetadata({title:'Przerwa między seriami',artist:'Siłka'});['play','pause','stop'].forEach(a=>{try{navigator.mediaSession.setActionHandler(a,null)}catch(e){}})}}catch(e){}}
+function rtAudioStop(){try{RT.aok=0;if(RT.au)RT.au.pause();if('mediaSession' in navigator)navigator.mediaSession.metadata=null}catch(e){}}
+function rtNotifyAsk(){try{if('Notification' in window&&Notification.permission==='default'&&!S.rest.np){S.rest.np=1;save();Notification.requestPermission()}}catch(e){}}
+function rtNotify(){try{if(!('Notification' in window)||Notification.permission!=='granted')return;const o={body:'Do dzieła! Czas na kolejną serię.',tag:'rest',renotify:true,vibrate:[500,160,500,160,900],icon:'icon-192.png'};
+ if(navigator.serviceWorker&&navigator.serviceWorker.ready)navigator.serviceWorker.ready.then(r=>r.showNotification('Koniec przerwy',o)).catch(()=>{try{new Notification('Koniec przerwy',o)}catch(e){}});else new Notification('Koniec przerwy',o)}catch(e){}}
+function rtNotifyClear(){try{if(navigator.serviceWorker&&navigator.serviceWorker.ready)navigator.serviceWorker.ready.then(r=>r.getNotifications({tag:'rest'}).then(l=>l.forEach(n=>n.close()))).catch(()=>{})}catch(e){}}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){rtNotifyClear();if(RT.end&&document.getElementById('rtt'))restTick()}});
 function rtEl(){let el=document.getElementById('rt');if(!el){el=document.createElement('div');el.id='rt';document.body.appendChild(el)}return el}
-function restStart(){if(!S.rest||!S.rest.on)return;audioUnlock();RT.tot=Math.max(10,S.rest.s||90);RT.end=Date.now()+RT.tot*1000;clearInterval(RT.iv);clearTimeout(RT.hid);const el=rtEl();el.className='';
+function restStart(){if(!S.rest||!S.rest.on)return;audioUnlock();rtNotifyAsk();RT.tot=Math.max(10,S.rest.s||90);RT.end=Date.now()+RT.tot*1000;RT.fired=0;clearInterval(RT.iv);clearTimeout(RT.hid);const el=rtEl();el.className='';rtAudio();
  el.innerHTML='<svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" fill="none" stroke="var(--ln)" stroke-width="3"/><circle id=rtc cx="18" cy="18" r="15" fill="none" stroke="var(--ac)" stroke-width="3" stroke-linecap="round" stroke-dasharray="94.25" stroke-dashoffset="0"/></svg><div><small id=rtl>Przerwa</small><span class=t id=rtt></span></div><button onclick="restAdd(30)">+30 s</button><button onclick="restStop()">✕</button>';
  requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('on')));RT.iv=setInterval(restTick,250);restTick()}
 function restTick(){const t=$('#rtt'),c=$('#rtc');if(!t)return;const left=Math.max(0,RT.end-Date.now()),sec=Math.ceil(left/1000);t.textContent=Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0');if(c)c.style.strokeDashoffset=String(94.25*(1-left/(RT.tot*1000)));
- if(left<=0){clearInterval(RT.iv);rtEl().classList.add('done');$('#rtl').textContent='Koniec przerwy';t.textContent='Do dzieła!';try{if(navigator.vibrate)navigator.vibrate([500,160,500,160,900])}catch(e){}if(!S.rest||S.rest.snd!==0)chime();RT.hid=setTimeout(restStop,4500)}}
-function restAdd(s){const now=Date.now();if(RT.end<=now){RT.end=now+s*1000;RT.tot=s;clearTimeout(RT.hid);rtEl().classList.remove('done');$('#rtl').textContent='Przerwa';clearInterval(RT.iv);RT.iv=setInterval(restTick,250)}else{RT.end+=s*1000;RT.tot+=s}restTick()}
-function restStop(){clearInterval(RT.iv);clearTimeout(RT.hid);const el=document.getElementById('rt');if(el)el.classList.remove('on','done')}
+ if(left<=0){clearInterval(RT.iv);rtEl().classList.add('done');$('#rtl').textContent='Koniec przerwy';t.textContent='Do dzieła!';if(RT.fired)return;RT.fired=1;if(document.hidden)rtNotify();else{try{if(navigator.vibrate)navigator.vibrate([500,160,500,160,900])}catch(e){}if(!RT.aok&&(!S.rest||S.rest.snd!==0))chime()}RT.hid=setTimeout(restStop,4500)}}
+function restAdd(s){const now=Date.now();if(RT.end<=now){RT.end=now+s*1000;RT.tot=s;RT.fired=0;clearTimeout(RT.hid);rtEl().classList.remove('done');$('#rtl').textContent='Przerwa';clearInterval(RT.iv);RT.iv=setInterval(restTick,250)}else{RT.end+=s*1000;RT.tot+=s}rtAudio();restTick()}
+function restStop(){clearInterval(RT.iv);clearTimeout(RT.hid);rtAudioStop();const el=document.getElementById('rt');if(el)el.classList.remove('on','done')}
 const goalN=()=>S.goal||N()||4;
 function wkCnt(off){const n=new Date(),a=new Date(n.getFullYear(),n.getMonth(),n.getDate());a.setDate(a.getDate()-((n.getDay()+6)%7)-7*off);const b=new Date(a);b.setDate(b.getDate()+7);const f=ymd(a),t=ymd(b);return vkeys().filter(k=>k>=f&&k<t).length}
 function goalRow(){const n=wkCnt(0),g=goalN();return '<div class=row style="margin-top:10px;justify-content:space-between;align-items:center"><span class=mu>Cel tygodnia</span><span class=gl><span class=gd>'+Array.from({length:Math.max(g,n)},(_,i)=>'<i class="'+(i<n?'on':'')+'"></i>').join('')+'</span><b>'+n+'/'+g+'</b></span></div>'}
