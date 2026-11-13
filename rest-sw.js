@@ -28,7 +28,7 @@ async function show(d) {
     renotify: true,
     vibrate: [500, 160, 500, 160, 900],
     icon: 'icons/icon-192.png',
-    badge: 'icons/icon-192.png',
+    badge: 'icons/badge-96.png',
     data: { end: d.end },
   });
 }
