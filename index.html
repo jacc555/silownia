@@ -206,6 +206,12 @@ details[open]::details-content{height:auto}
 .bd .m.pu{animation:mfade .5s ease backwards,rpul 1.8s ease-in-out infinite;animation-delay:var(--d,0ms),.7s}
 @keyframes rpul{0%,100%{opacity:.95}50%{opacity:.42}}
 @media (prefers-reduced-motion:reduce){.bd .m.pu{animation:mfade .5s ease backwards}}
+
+.bd.im.pv,.bd.im.pv .m{pointer-events:none}
+.bd.im.pv image{filter:grayscale(1) brightness(1.12) contrast(.95)}
+.bd.im.pv .m.hl{fill:#ff0000;stroke:#ff0000;stroke-width:2;stroke-opacity:.7;fill-opacity:.55;opacity:1;animation:mfade .5s ease backwards,rglow 1.7s ease-in-out infinite;animation-delay:var(--d,0ms),.5s}
+@keyframes rglow{0%,100%{fill-opacity:.3;stroke-opacity:.45;filter:drop-shadow(0 0 5px rgba(255,0,0,.35))}50%{fill-opacity:.95;stroke-opacity:1;filter:drop-shadow(0 0 26px #ff0000)}}
+@media (prefers-reduced-motion:reduce){.bd.im.pv .m.hl{animation:none;fill-opacity:.75}}
 </style><link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#e8590c">
 <meta name="mobile-web-app-capable" content="yes">
@@ -869,10 +875,10 @@ const BDP={"f":{"tr":"M283 143l-1 7 2 12 4 9 7 9 11 7 13 1 4 1 23 -3 -1 -4 -9 -6
 function bodySvg(st,click,mw,id){let rd=0;
  const R=(k,d)=>{const s=st[k]||{},c=s.c||'var(--mu)',o=s.o==null?0:s.o;return `<g class="m${s.hl?' hl':''}${s.pu?' pu':''}" data-r="${k}" style="--c:${c};--o:${o};--d:${(rd++)*30}ms"${click?` onclick="${click===true?`rcv('${k}')`:`mnm('${k}',this)`}"`:''}><title>${RL[k]}</title><path d="${d}"/></g>`},
  V=(im,w,h,Q)=>`<image href="${im}" width="${w}" height="${h}"/>${Object.keys(Q).map(k=>R(k,Q[k])).join('')}`;
- return `<svg class="bd im"${id?` id=${id}`:''} viewBox="0 0 972 1120" style="max-width:${mw||300}px" role="img" aria-label="Sylwetka z zaznaczonymi mięśniami"><g>${V(IMG_F,485,1085,BDP.f)}</g><g transform="translate(490 0)">${V(IMG_B,482,1092,BDP.b)}</g><text x=242 y=1112 text-anchor=middle>przód</text><text x=731 y=1112 text-anchor=middle>tył</text></svg>`}
+ return `<svg class="bd im${click?'':' pv'}"${id?` id=${id}`:''} viewBox="0 0 972 1120" style="max-width:${mw||300}px" role="img" aria-label="Sylwetka z zaznaczonymi mięśniami"><g>${V(IMG_F,485,1085,BDP.f)}</g><g transform="translate(490 0)">${V(IMG_B,482,1092,BDP.b)}</g><text x=242 y=1112 text-anchor=middle>przód</text><text x=731 y=1112 text-anchor=middle>tył</text></svg>`}
 function mnm(k,el){const sv=el.closest('svg'),l=sv.parentNode.querySelector('.mnl'),was=el.classList.contains('sl');sv.querySelectorAll('.m').forEach(g=>g.classList.toggle('sl',!was&&g.dataset.r===k));if(!l)return;if(!l.dataset.o)l.dataset.o=l.innerHTML;l.innerHTML=was?l.dataset.o:'<b style="color:var(--tx)">'+RL[k]+'</b><div class=mu style="margin-top:2px">'+(el.classList.contains('hl')?'angażowany w tym ćwiczeniu':'nie jest główną partią tego ćwiczenia')+'</div>'}
-function muscleBlock(n){const g=grpOf(n),r=regsOf(n,g);if(!r.length)return '';const c=gc(g),st={};r.forEach(k=>st[k]={c,o:1,hl:1});const m=MUS[n]||'';
- return `<div style="margin-top:6px">${bodySvg(st,'n',300)}<div class=mnl style="text-align:center;margin-top:6px;min-height:40px"><b style="color:${c}">${r.map(k=>RL[k]).join(' · ')}</b>${m?`<div class=mu style="margin-top:2px">${esc(m.charAt(0).toUpperCase()+m.slice(1))}</div>`:''}<div class=mu style="margin-top:2px;font-size:11px">Dotknij mięśnia, aby zobaczyć jego nazwę.</div></div></div>`}
+function muscleBlock(n){const g=grpOf(n),r=regsOf(n,g);if(!r.length)return '';const st={};r.forEach(k=>st[k]={c:'#ff0000',o:1,hl:1});const m=MUS[n]||'';
+ return `<div style="margin-top:6px">${bodySvg(st,false,300)}<div class=mnl style="text-align:center;margin-top:6px"><b style="color:#ff0000">${r.map(k=>RL[k]).join(' · ')}</b>${m?`<div class=mu style="margin-top:2px">${esc(m.charAt(0).toUpperCase()+m.slice(1))}</div>`:''}</div></div>`}
 /* ===== Regeneracja mięśni ===== */
 function recData(){const R={};Object.entries(S.log).forEach(([k,e])=>{if(!valid(e))return;const ts=e.en||e.st||pd(k).getTime()+43200000,per={};
   Object.entries(e.ex).forEach(([n,x])=>{const c=x.sets.filter(s=>s.ok).length;if(!c)return;regsOf(n,x.g).forEach(r=>per[r]=(per[r]||0)+c)});
