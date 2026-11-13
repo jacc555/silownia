@@ -959,7 +959,7 @@ function rtAudio(){try{const left=(RT.end-Date.now())/1000;if(left<=0)return;if(
  if('mediaSession' in navigator){navigator.mediaSession.metadata=new MediaMetadata({title:'Przerwa między seriami',artist:'Siłka'});['play','pause','stop'].forEach(a=>{try{navigator.mediaSession.setActionHandler(a,null)}catch(e){}})}}catch(e){}}
 function rtAudioStop(){try{RT.aok=0;if(RT.au)RT.au.pause();if('mediaSession' in navigator)navigator.mediaSession.metadata=null}catch(e){}}
 /* ===== Powiadomienie po przerwie – planowane w osobnym service workerze (rest-sw.js), więc działa też gdy aplikacja jest w tle ===== */
-const RT_TITLE='Koniec przerwy',RT_BODY='Do dzieła! Czas na kolejną serię.',RT_BADGE='icons/badge-96.png';
+const RT_TITLE='Koniec przerwy',RT_BODY='Do dzieła! Czas na kolejną serię.',RT_BADGE='icons/badge-96.png?v=2';
 const ABS=u=>new URL(u,location.href).href;const RSW={reg:null,p:null};
 function rswInit(){if(!('serviceWorker' in navigator))return Promise.resolve(null);if(RSW.p)return RSW.p;
  RSW.p=navigator.serviceWorker.register('rest-sw.js',{scope:'./rest-notif/'}).then(r=>{RSW.reg=r;if(r.active)return r;const w=r.installing||r.waiting;if(!w)return r;
