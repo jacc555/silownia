@@ -901,7 +901,7 @@ function recData(){const R={};Object.entries(S.log).forEach(([k,e])=>{if(!valid(
   Object.entries(e.ex).forEach(([n,x])=>{const c=x.sets.filter(s=>s.ok).length;if(!c)return;regsOf(n,x.g).forEach(r=>per[r]=(per[r]||0)+c)});
   Object.entries(per).forEach(([r,c])=>{const o=R[r];if(!o||ts>o.ts)R[r]={ts,sets:c}})});return R}
 const REC_H=[24,36,48]; /* godziny pełnej regeneracji: do 5 serii, 6–11 serii, 12+ serii (czerwony = pierwsza połowa) */
-function recSt(o){const h=(Date.now()-o.ts)/36e5,need=o.sets>=12?REC_H[2]:o.sets>=6?REC_H[1]:REC_H[0],p=h/need;return{h,need,p,fade:p<1?1:Math.max(0,Math.min(1,(50-h)/(50-need))),col:p<.5?'#ff0000':p<1?'#f59f00':'#2f9e44',lab:p<.5?'po treningu':p<1?'w regeneracji':'gotowy'}}
+function recSt(o){const h=(Date.now()-o.ts)/36e5,need=o.sets>=12?REC_H[2]:o.sets>=6?REC_H[1]:REC_H[0],end=o.sets>=12?72:50,p=h/need;return{h,need,p,fade:p<1?1:Math.max(0,Math.min(1,(end-h)/(end-need))),col:p<.5?'#ff0000':p<1?'#f59f00':'#2f9e44',lab:p<.5?'po treningu':p<1?'w regeneracji':'gotowy'}}
 const agoT=h=>h<1?'przed chwilą':h<48?Math.round(h)+' godz. temu':Math.round(h/24)+' dni temu';
 function rcv(r,tg){const R=recData()[r],el=$('#rcd');document.querySelectorAll('#rcm .m').forEach(g=>{g.classList.toggle('sl',g.dataset.r===r);g.classList.toggle('tp',g.dataset.r===r&&g===tg)});if(!el)return;
  if(!R){el.innerHTML='<b style="color:var(--tx)">'+RL[r]+'</b><br>Brak zapisanych serii dla tego mięśnia.';return}
