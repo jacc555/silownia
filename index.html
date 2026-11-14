@@ -412,16 +412,16 @@ let chg=0,tab='t',vd=0,cm=new Date(),cs=null,per='m',sx='',rz=0,cf=0;
 S.cur=N()?S.cur%N():0;vd=S.cur;
 const DAYACC=['niedzielę','poniedziałek','wtorek','środę','czwartek','piątek','sobotę'],dDiff=(a,b)=>Math.round((pd(b)-pd(a))/864e5),dniS=n=>n===1?'1 dzień':n+' dni';
 const agoD=n=>n===1?'wczoraj':n+' dni temu';
-function lcOk(){const c=document.getElementById('lc');S.ack=today();save();if(!c)return;const sib=[];let n=c.nextElementSibling;while(n){sib.push(n);n=n.nextElementSibling}
+function lcOk(ch){const c=document.getElementById('lc');S.ack=today();if(ch)chg=1;save();if(!c){if(ch)render();return}const sib=[];let n=c.nextElementSibling;while(n){sib.push(n);n=n.nextElementSibling}
  const h=c.offsetHeight+parseFloat(getComputedStyle(c).marginBottom||0);
- if(matchMedia('(prefers-reduced-motion:reduce)').matches){c.remove();return}
+ if(matchMedia('(prefers-reduced-motion:reduce)').matches){c.remove();if(ch)render();return}
  try{if(navigator.vibrate)navigator.vibrate(12)}catch(x){}
  c.style.pointerEvents='none';
  c.animate([{transform:'perspective(700px) rotateX(0) scale(1)',opacity:1},{transform:'perspective(700px) rotateX(-80deg) translateY(-30px) scale(.92)',opacity:0}],{duration:420,easing:'cubic-bezier(.5,0,.8,.4)',fill:'forwards'}).onfinish=()=>{
-  c.remove();sib.forEach((s,i)=>s.animate([{transform:'translateY('+h+'px)'},{transform:'translateY(-7px)',offset:.62},{transform:'translateY(2px)',offset:.82},{transform:'translateY(0)'}],{duration:620,delay:i*35,easing:'cubic-bezier(.3,.7,.3,1)',fill:'backwards'}))}}
+  if(ch){render();return}c.remove();sib.forEach((s,i)=>s.animate([{transform:'translateY('+h+'px)'},{transform:'translateY(-7px)',offset:.62},{transform:'translateY(2px)',offset:.82},{transform:'translateY(0)'}],{duration:620,delay:i*35,easing:'cubic-bezier(.3,.7,.3,1)',fill:'backwards'}))}}
 function lastCard(e){if(e||S.ack===today())return '';const ks=vkeys();if(!ks.length)return '';const lk=ks[ks.length-1],L=S.log[lk],n=dDiff(lk,today());if(n<1)return '';
  const w=DAYACC[pd(lk).getDay()],nx=S.cur,nm=S.plan[L.d]?S.plan[L.d].n:'',nn=S.plan[nx]?S.plan[nx].n:'';
- return `<div class=card id=lc style="border-color:var(--ac);transform-origin:50% 0;overflow:hidden"><div class=mu>Poprzednio: ${agoD(n)} (w ${w}) – Trening ${L.d+1}${nm?' · '+esc(nm):''} ✓</div>${n>=3?`<div class=mu style="margin-top:2px">Przerwa: ${dniS(n-1)} bez treningu</div>`:''}<b style="display:block;margin-top:8px;text-align:center">${S.sex==='k'?'Dziś powinnaś robić':S.sex==='m'?'Dziś powinieneś robić':'Dziś w planie'}: Trening ${nx+1}${nn?' – '+esc(nn):''}</b><div style="text-align:center;margin-top:8px"><button class=lcb onclick="lcOk()">Zaczynamy</button></div><div style="margin-top:8px;text-align:center;font-size:11.5px;color:var(--mu);opacity:.65">Lub wybierz inny trening przyciskiem „Zmień trening” poniżej.</div></div>`}
+ return `<div class=card id=lc style="border-color:var(--ac);transform-origin:50% 0;overflow:hidden"><div class=mu>Poprzednio: ${agoD(n)} (w ${w}) – Trening ${L.d+1}${nm?' · '+esc(nm):''} ✓</div>${n>=3?`<div class=mu style="margin-top:2px">Przerwa: ${dniS(n-1)} bez treningu</div>`:''}<b style="display:block;margin-top:8px;text-align:center">${S.sex==='k'?'Dziś powinnaś robić':S.sex==='m'?'Dziś powinieneś robić':'Dziś w planie'}: Trening ${nx+1}${nn?' – '+esc(nn):''}</b><div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-top:10px"><button class=lcb onclick="lcOk()">OK</button><span class=mu>lub</span><button onclick="lcOk(1)">Zmień trening</button></div></div>`}
 
 const lastW=n=>{const k=Object.keys(S.log).sort().reverse();for(const d of k){const x=S.log[d].ex[n];if(x){const o=x.sets.filter(s=>s.ok&&+s.w>0);if(o.length)return o[o.length-1].w}}return''};
 const lastS=n=>{const k=Object.keys(S.log).sort().reverse();for(const d of k){const x=S.log[d].ex[n];if(x&&x.sets.some(t=>+t.w>0))return x.sets}return null};
@@ -460,7 +460,7 @@ function vToday(){if(!N())return '<div class=card><b>Brak treningów</b><div cla
  h+=lastCard(e);
  let tot=0,dn=0;exs(e).forEach(x=>{if(x.g==='Cardio')return;const a=e&&e.ex[x.n]?e.ex[x.n].sets:def(x);tot+=a.length;dn+=a.filter(s=>s.ok).length});
  h+=`<div class=card><div class=mu>${new Date().toLocaleDateString('pl-PL',{weekday:'long',day:'numeric',month:'long'})}</div><div class=h1 style="color:${dc(vd)}">Trening ${vd+1}</div><div style="font-size:17px;font-weight:600;color:var(--mu);margin-top:2px">${esc(P.n)}</div>${planList(P)}`;
- if(!e&&!chg)h+=`<div style="margin-top:8px"><button onclick="chg=1;render()">Zmień trening</button></div>`;
+ 
  if(!e&&chg)h+=`<div class=tg>${S.plan.map((p,i)=>`<button class="tt ${i==vd?'on':''}" onclick="vd=${i};chg=0;render()"><span>Trening ${i+1}</span>${i==S.cur?'<i class=dot></i>':''}<small>${esc(p.n)}</small></button>`).join('')}</div>`;
  h+=`<div class=bar><div id=pbar data-to="${tot?dn/tot*100:0}" style="width:${lastPct}%"></div></div><div class=mu>${dn}/${tot} serii</div>${tot&&dn===tot?sumCard(e,lastPct<100):''}</div>`;
  h+=`<div id=clk>${clkCard(e)}</div>`+wuCard(e);
