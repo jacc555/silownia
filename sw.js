@@ -1,4 +1,4 @@
-const CACHE = "silownia-v2";
+const CACHE = "silownia-v3";
 const FILES = [
   "./",
   "./index.html",
@@ -7,7 +7,8 @@ const FILES = [
   "./icons/icon-512.png",
   "./icons/icon-maskable-512.png",
   "./icons/favicon-32.png",
-  "./icons/apple-touch-icon.png"
+  "./icons/apple-touch-icon.png",
+  "./icons/badge-96.png"
 ];
 
 self.addEventListener("install", e => {
@@ -27,21 +28,38 @@ self.addEventListener("activate", e => {
   );
 });
 
+// Strategia: odpowiedz od razu z pamięci podręcznej (start bez czekania na sieć),
+// a w tle pobierz świeżą wersję. Jeśli strona się zmieniła, aplikacja pokaże „Dostępna nowa wersja”.
 self.addEventListener("fetch", e => {
-  if (e.request.method !== "GET") return;
-  const url = new URL(e.request.url);
+  const req = e.request;
+  if (req.method !== "GET") return;
+  const url = new URL(req.url);
   if (url.origin !== location.origin) return;
 
-  e.respondWith(
-    // "no-cache" omija cache HTTP przeglądarki i zawsze sprawdza serwer
-    fetch(e.request, { cache: "no-cache" })
-      .then(r => {
+  e.respondWith((async () => {
+    const cache = await caches.open(CACHE);
+    let cached = await cache.match(req);
+    if (!cached && req.mode === "navigate") cached = await cache.match("./index.html");
+
+    const refresh = fetch(req, { cache: "no-cache" })
+      .then(async r => {
         if (r && r.ok) {
-          const copy = r.clone();
-          caches.open(CACHE).then(c => c.put(e.request, copy));
+          if (cached && req.mode === "navigate") {
+            const a = cached.headers.get("etag") || cached.headers.get("last-modified");
+            const b = r.headers.get("etag") || r.headers.get("last-modified");
+            if (a && b && a !== b) {
+              const cs = await self.clients.matchAll({ type: "window" });
+              cs.forEach(c => c.postMessage({ type: "sw-updated" }));
+            }
+          }
+          await cache.put(req, r.clone());
         }
         return r;
       })
-      .catch(() => caches.match(e.request).then(r => r || caches.match("./index.html")))
-  );
+      .catch(() => null);
+
+    if (cached) { e.waitUntil(refresh); return cached; }
+    const r = await refresh;
+    return r || Response.error();
+  })());
 });

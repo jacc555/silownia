@@ -245,6 +245,8 @@ details[open]::details-content{height:auto}
 .bdw .bd.im .m.pu.sl{animation:mfade .5s ease backwards}
 .bdw .bd.im .m.pu:not(.sl),.bdw .bd.im.pv .m.hl{animation:mfade .5s ease backwards;fill:#ff0000;stroke:#ff0000;stroke-width:2;stroke-opacity:.7;fill-opacity:.5;opacity:1}
 @media (prefers-reduced-motion:reduce){.bdo{animation:none;opacity:.7}.gow::before{animation:none;opacity:0}}
+.yr{display:flex;align-items:center;gap:0;padding:2px 0;font-size:14px}.yd{width:9px;height:9px;border-radius:3px;flex:none;margin-right:9px}.gx{transform-origin:left;animation:growx .9s cubic-bezier(.2,.8,.2,1) both}
+#upd{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:16;display:flex;align-items:center;gap:8px;padding:6px 8px 6px 14px;border-radius:99px;background:var(--ac);color:#fff;font-size:13px;font-weight:600;box-shadow:0 8px 22px -8px rgba(0,0,0,.5);white-space:nowrap}#upd button{padding:5px 11px;border-radius:99px;background:rgba(255,255,255,.22);color:#fff;font-size:12.5px}
 </style><link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#e8590c">
 <meta name="mobile-web-app-capable" content="yes">
@@ -558,11 +560,14 @@ function tAgg(from){const r={n:0,min:0,sm:0,hrs:Array(6).fill(0),list:[]};
   const d=new Date(e.st),sm=d.getHours()*60+d.getMinutes();r.n++;r.min+=m;r.sm+=sm;r.hrs[Math.min(5,Math.max(0,Math.floor((d.getHours()-5)/3)))]++;r.list.push({dt,st:e.st,en:e.en,m})}
  r.list.sort((a,b)=>b.dt.localeCompare(a.dt));return r}
 function hbars(v,l){const mx=Math.max(1,...v);return `<svg viewBox="0 0 320 120" width="100%">${v.map((n,i)=>{const h=n/mx*70,x=i*53+8;return `<rect x="${x}" y="${90-h}" width="36" height="${h}" rx="5" fill="var(--ac)" opacity="${n?1:.25}" class=gy style="animation-delay:${i*60}ms"/><text class=fi style="animation-delay:${i*60+350}ms" x="${x+18}" y="${84-h}" text-anchor="middle" font-size="11" fill="var(--tx)">${n||''}</text><text x="${x+18}" y="110" text-anchor="middle" font-size="10" fill="var(--mu)">${l[i]}</text>`}).join('')}</svg>`}
+const WDP=['w niedzielę','w poniedziałek','we wtorek','w środę','w czwartek','w piątek','w sobotę'];
+function lastTrain(){const ks=vkeys(),lk=ks[ks.length-1];if(!lk)return '';const e=S.log[lk],pl=S.plan[e.d],nm='Trening '+(e.d+1)+(pl?' · '+esc(pl.n):''),d=pd(lk);
+ return '<div style="margin-top:12px;font-size:15px;line-height:1.4;color:var(--tx)">Ostatni trening: <b>'+nm+'</b> '+WDP[d.getDay()]+' '+d.toLocaleDateString('pl-PL',{day:'numeric',month:'long',year:'numeric'})+' r.</div>'}
 function yearCard(){const Y=new Date().getFullYear(),dy=(Y%4===0&&(Y%100!==0||Y%400===0))?366:365,ks=vkeys().filter(k=>k.startsWith(Y+'-')),td=today(),el=Math.min(dy,dDiff(Y+'-01-01',td)+1),set=new Set(ks),rest=Math.max(0,el-ks.length);
  let best=0;for(let i=1;i<ks.length;i++)best=Math.max(best,dDiff(ks[i-1],ks[i])-1);if(ks.length)best=Math.max(best,dDiff(ks[ks.length-1],td)-1);
  let rc='',run=null,x=0;const flush=()=>{if(run)rc+=`<rect x="${run.s}" width="${x-run.s}" height="10" fill="${run.c}"/>`};
  for(let i=0;i<dy;i++){const d=new Date(Y,0,1+i),c=i>=el?'var(--ln)':set.has(ymd(d))?'#2f9e44':'#e03131';if(!run||run.c!==c){flush();run={s:i,c}}x=i+1}flush();
- return `<div class=card><b>Dni treningowe / nietreningowe</b><div style="margin-top:8px">W ${Y} roku dni treningowych było <b>${ks.length}</b>, nietreningowych <b>${rest}</b> · ${(ks.length/Math.max(1,el)*100).toFixed(1).replace('.',',')}% treningowych</div><svg viewBox="0 0 ${dy} 10" preserveAspectRatio="none" style="width:100%;height:12px;margin-top:8px;border-radius:6px;display:block">${rc}</svg><div class=mu style="margin-top:8px">Najdłuższa przerwa między treningami: <b>${ks.length?dniS(best):'–'}</b></div></div>`}
+ return `<div class=card><b>Dni treningowe / nietreningowe w ${Y} roku</b><div style="margin-top:10px"><div class=yr><span class=yd style="background:#2f9e44"></span><b>${ks.length}</b> treningowych</div><div class=yr><span class=yd style="background:#e03131"></span><b>${rest}</b> nietreningowych</div><div class=yr><span class=yd style="background:transparent;border:1.5px solid #2f9e44"></span><b>${(ks.length/Math.max(1,el)*100).toFixed(1).replace('.',',')}%</b> treningowych</div></div><svg class=gx viewBox="0 0 ${dy} 10" preserveAspectRatio="none" style="width:100%;height:12px;margin-top:8px;border-radius:6px;display:block">${rc}</svg><div class=mu style="margin-top:8px">Najdłuższa przerwa między treningami: <b>${ks.length?dniS(best):'–'}</b></div>${lastTrain()}</div>`}
 function vStats(){
  const now=new Date(),wk=new Date(now.getFullYear(),now.getMonth(),now.getDate());wk.setDate(wk.getDate()-((now.getDay()+6)%7));
  const F={w:ymd(wk),m:ymd(new Date(now.getFullYear(),now.getMonth(),1)),y:now.getFullYear()+'-01-01',a:'0'},A={};for(const k in F)A[k]=agg(F[k]);
@@ -1143,5 +1148,5 @@ function finFx(e){const o=sumOf(e),rc=recCnt(e);let ov=document.getElementById('
 render();requestAnimationFrame(()=>setTimeout(rs,0));
 if('scrollRestoration' in history)history.scrollRestoration='manual';scrollTo(0,0);
 
-</script><script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}</script>
+</script><script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})});navigator.serviceWorker.addEventListener("message",function(e){if(e.data&&e.data.type==="sw-updated"&&!document.getElementById("upd")){var d=document.createElement("div");d.id="upd";d.innerHTML='Dostępna nowa wersja <button onclick="location.reload()">Odśwież</button><button onclick="this.parentNode.remove()" aria-label="Zamknij">✕</button>';document.body.appendChild(d)}})}</script>
 </body></html>
