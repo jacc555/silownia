@@ -459,7 +459,7 @@ function vToday(){if(!N())return '<div class=card><b>Brak treningów</b><div cla
  const e=S.log[today()];if(e)vd=e.d;if(vd>=N())vd=0;const P=S.plan[vd];let h='';
  h+=lastCard(e);
  let tot=0,dn=0;exs(e).forEach(x=>{if(x.g==='Cardio')return;const a=e&&e.ex[x.n]?e.ex[x.n].sets:def(x);tot+=a.length;dn+=a.filter(s=>s.ok).length});
- h+=`<div class=card><div class=mu>${new Date().toLocaleDateString('pl-PL',{weekday:'long',day:'numeric',month:'long'})}</div><div class=h1 style="color:${dc(vd)}">Trening ${vd+1}</div><div style="font-size:17px;font-weight:600;color:var(--mu);margin-top:2px">${esc(P.n)}</div>${planList(P)}`;
+ h+=`<div class=card><div class=mu>${new Date().toLocaleDateString('pl-PL',{weekday:'long',day:'numeric',month:'long'})}</div><div class=row style="align-items:center;gap:10px"><div class=h1 style="color:${dc(vd)}">Trening ${vd+1}</div>${!e&&N()>1?`<button class=ib title="Zmień trening" aria-label="Zmień trening" style="width:30px;height:30px;font-size:15px;opacity:.7" onclick="chg=${chg?0:1};render()">⇄</button>`:''}</div><div style="font-size:17px;font-weight:600;color:var(--mu);margin-top:2px">${esc(P.n)}</div>${planList(P)}`;
  
  if(!e&&chg)h+=`<div class=tg>${S.plan.map((p,i)=>`<button class="tt ${i==vd?'on':''}" onclick="vd=${i};chg=0;render()"><span>Trening ${i+1}</span>${i==S.cur?'<i class=dot></i>':''}<small>${esc(p.n)}</small></button>`).join('')}</div>`;
  h+=`<div class=bar><div id=pbar data-to="${tot?dn/tot*100:0}" style="width:${lastPct}%"></div></div><div class=mu>${dn}/${tot} serii</div>${tot&&dn===tot?sumCard(e,lastPct<100):''}</div>`;
