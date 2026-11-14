@@ -229,6 +229,10 @@ details[open]::details-content{height:auto}
 .bd.im .m.sl.gr.tp:not(.pu){fill:#339af0;fill-opacity:.37;animation:mfade .5s ease backwards,selin4 2.4s ease-in-out infinite;animation-delay:0s,.3s}
 .bd.im .m.sl[onclick]:hover{opacity:1!important}
 @media (prefers-reduced-motion:reduce){.bd.im .m.sl:not(.pu),.bd.im .m.sl.tp:not(.pu),.bd.im .m.sl.gr:not(.pu),.bd.im .m.sl.gr.tp:not(.pu){animation:mfade .5s ease backwards}}
+@keyframes lcp{0%{box-shadow:0 0 0 0 rgba(232,89,12,.5);transform:scale(1)}60%{box-shadow:0 0 0 10px rgba(232,89,12,0);transform:scale(1.05)}100%{box-shadow:0 0 0 0 rgba(232,89,12,0);transform:scale(1)}}
+.lcb{background:var(--ac);color:#fff;border:0;border-radius:999px;padding:7px 26px;font-size:14px;font-weight:700;animation:lcp 1.8s ease-in-out infinite}
+.lcb:active{transform:scale(.95);animation:none}
+@media (prefers-reduced-motion:reduce){.lcb{animation:none}}
 </style><link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#e8590c">
 <meta name="mobile-web-app-capable" content="yes">
@@ -404,10 +408,20 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 const nf=n=>Math.round(n).toLocaleString('pl-PL'),N=()=>S.plan.length;
 const valid=e=>e&&(e.fin||Object.values(e.ex).some(x=>x.sets.some(s=>s.ok)));
 const vkeys=()=>Object.keys(S.log).filter(k=>valid(S.log[k])).sort();
-let chg=0,tab='t',vd=0,q=0,cm=new Date(),cs=null,per='m',sx='',rz=0,cf=0;
+let chg=0,tab='t',vd=0,cm=new Date(),cs=null,per='m',sx='',rz=0,cf=0;
 S.cur=N()?S.cur%N():0;vd=S.cur;
-const needQ=()=>{const t=today();return vkeys().length&&S.asked!==t&&!valid(S.log[t])};
-q=needQ()?(valid(S.log[yd()])?3:1):0;
+const DAYACC=['niedzielę','poniedziałek','wtorek','środę','czwartek','piątek','sobotę'],dDiff=(a,b)=>Math.round((pd(b)-pd(a))/864e5),dniS=n=>n===1?'1 dzień':n+' dni';
+const agoD=n=>n===1?'wczoraj':n+' dni temu';
+function lcOk(){const c=document.getElementById('lc');S.ack=today();save();if(!c)return;const sib=[];let n=c.nextElementSibling;while(n){sib.push(n);n=n.nextElementSibling}
+ const h=c.offsetHeight+parseFloat(getComputedStyle(c).marginBottom||0);
+ if(matchMedia('(prefers-reduced-motion:reduce)').matches){c.remove();return}
+ try{if(navigator.vibrate)navigator.vibrate(12)}catch(x){}
+ c.style.pointerEvents='none';
+ c.animate([{transform:'perspective(700px) rotateX(0) scale(1)',opacity:1},{transform:'perspective(700px) rotateX(-80deg) translateY(-30px) scale(.92)',opacity:0}],{duration:420,easing:'cubic-bezier(.5,0,.8,.4)',fill:'forwards'}).onfinish=()=>{
+  c.remove();sib.forEach((s,i)=>s.animate([{transform:'translateY('+h+'px)'},{transform:'translateY(-7px)',offset:.62},{transform:'translateY(2px)',offset:.82},{transform:'translateY(0)'}],{duration:620,delay:i*35,easing:'cubic-bezier(.3,.7,.3,1)',fill:'backwards'}))}}
+function lastCard(e){if(e||S.ack===today())return '';const ks=vkeys();if(!ks.length)return '';const lk=ks[ks.length-1],L=S.log[lk],n=dDiff(lk,today());if(n<1)return '';
+ const w=DAYACC[pd(lk).getDay()],nx=S.cur,nm=S.plan[L.d]?S.plan[L.d].n:'',nn=S.plan[nx]?S.plan[nx].n:'';
+ return `<div class=card id=lc style="border-color:var(--ac);transform-origin:50% 0;overflow:hidden"><div class=mu>Poprzednio: ${agoD(n)} (w ${w}) – Trening ${L.d+1}${nm?' · '+esc(nm):''} ✓</div>${n>=3?`<div class=mu style="margin-top:2px">Przerwa: ${dniS(n-1)} bez treningu</div>`:''}<b style="display:block;margin-top:8px;text-align:center">${S.sex==='k'?'Dziś powinnaś robić':S.sex==='m'?'Dziś powinieneś robić':'Dziś w planie'}: Trening ${nx+1}${nn?' – '+esc(nn):''}</b><div style="text-align:center;margin-top:8px"><button class=lcb onclick="lcOk()">Zaczynamy</button></div><div style="margin-top:8px;text-align:center;font-size:11.5px;color:var(--mu);opacity:.65">Lub wybierz inny trening przyciskiem „Zmień trening” poniżej.</div></div>`}
 
 const lastW=n=>{const k=Object.keys(S.log).sort().reverse();for(const d of k){const x=S.log[d].ex[n];if(x){const o=x.sets.filter(s=>s.ok&&+s.w>0);if(o.length)return o[o.length-1].w}}return''};
 const lastS=n=>{const k=Object.keys(S.log).sort().reverse();for(const d of k){const x=S.log[d].ex[n];if(x&&x.sets.some(t=>+t.w>0))return x.sets}return null};
@@ -437,19 +451,13 @@ const adds=i=>{const a=mat(i),L=a[a.length-1];a.push({w:L?L.w:'',r:L?L.r:10,ok:0
 const ns=(i,d)=>{const a=mat(i);if(d>0)a.push({...a[a.length-1],ok:0});else if(a.length>1)a.pop();save();render()};
 const fin=()=>{const e=ent(),first=!e.fin;if(first){e.fin=1;e.en=Date.now();S.cur=(e.d+1)%N()}save();render();if(first){try{restStop()}catch(x){}finFx(e)}};
 const undo=()=>{const t=today(),e=S.log[t];if(e&&e.fin)S.cur=e.d;delete S.log[t];vd=S.cur;save();render()};
-const q1=y=>{if(y){S.log[yd()]=full(S.cur);q=2}else{S.asked=today();q=0}save();render()};
-const q2=y=>{if(y){S.cur=(S.cur+1)%N();vd=S.cur}S.asked=today();q=0;save();render()};
-const q3=y=>{if(y){S.cur=(S.log[yd()].d+1)%N();vd=S.cur;S.asked=today();q=0;save()}else q=4;render()};const q4=i=>{S.cur=i;vd=i;S.asked=today();q=0;save();render()};
 const mk=(k,d)=>{const l=vkeys().pop()||'';S.log[k]=full(d);if(k>=l)S.cur=(d+1)%N();save();render()};
 const del=k=>{delete S.log[k];save();render()};
 const cmv=d=>{cm=new Date(cm.getFullYear(),cm.getMonth()+d,1);render()};
 
 function vToday(){if(!N())return '<div class=card><b>Brak treningów</b><div class=mu style="margin-top:6px">Dodaj trening w „Edycja planu treningowego” albo zaimportuj kopię danych (Ustawienia).</div><button class=pri style="margin-top:10px" onclick="$(\'#pd\').open=true;scrollTo({top:document.body.scrollHeight,behavior:\'smooth\'})">Otwórz edycję planu</button></div>';
  const e=S.log[today()];if(e)vd=e.d;if(vd>=N())vd=0;const P=S.plan[vd];let h='';
- if(q==1)h+=`<div class=card style="border-color:var(--ac)"><b>Czy poprzednio był trening: Trening ${S.cur+1} – ${esc(S.plan[S.cur].n)}?</b><div class=row style="margin-top:10px"><button class=pri onclick="q1(1)">Tak</button><button onclick="q1(0)">Nie</button></div></div>`;
- if(q==2)h+=`<div class=card style="border-color:var(--ac)"><div class=mu>✓ Wczorajszy trening zapisany w kalendarzu</div><b>Czy przejść do kolejnego treningu (Trening ${(S.cur+1)%N()+1})?</b><div class=row style="margin-top:10px"><button class=pri onclick="q2(1)">Tak</button><button onclick="q2(0)">Nie</button></div></div>`;
- if(q==3){const L=S.log[yd()],nx=(L.d+1)%N();h+=`<div class=card style="border-color:var(--ac)"><div class=mu>Poprzednio: Trening ${L.d+1} – ${esc(S.plan[L.d]?S.plan[L.d].n:'')} ✓</div><b>Czy wykonujemy Trening ${nx+1} – ${esc(S.plan[nx].n)}?</b><div class=row style="margin-top:10px"><button class=pri onclick="q3(1)">Tak</button><button onclick="q3(0)">Nie</button></div></div>`}
- if(q==4)h+=`<div class=card style="border-color:var(--ac)"><b>Który trening dziś robisz?</b><div class=row style="margin-top:10px">${S.plan.map((p,i)=>`<button class=chip style="background:${dc(i)};color:#fff" onclick="q4(${i})">T${i+1}</button>`).join('')}</div></div>`;
+ h+=lastCard(e);
  let tot=0,dn=0;exs(e).forEach(x=>{if(x.g==='Cardio')return;const a=e&&e.ex[x.n]?e.ex[x.n].sets:def(x);tot+=a.length;dn+=a.filter(s=>s.ok).length});
  h+=`<div class=card><div class=mu>${new Date().toLocaleDateString('pl-PL',{weekday:'long',day:'numeric',month:'long'})}</div><div class=h1 style="color:${dc(vd)}">Trening ${vd+1}</div><div style="font-size:17px;font-weight:600;color:var(--mu);margin-top:2px">${esc(P.n)}</div>${planList(P)}`;
  if(!e&&!chg)h+=`<div style="margin-top:8px"><button onclick="chg=1;render()">Zmień trening</button></div>`;
@@ -538,10 +546,16 @@ function tAgg(from){const r={n:0,min:0,sm:0,hrs:Array(6).fill(0),list:[]};
   const d=new Date(e.st),sm=d.getHours()*60+d.getMinutes();r.n++;r.min+=m;r.sm+=sm;r.hrs[Math.min(5,Math.max(0,Math.floor((d.getHours()-5)/3)))]++;r.list.push({dt,st:e.st,en:e.en,m})}
  r.list.sort((a,b)=>b.dt.localeCompare(a.dt));return r}
 function hbars(v,l){const mx=Math.max(1,...v);return `<svg viewBox="0 0 320 120" width="100%">${v.map((n,i)=>{const h=n/mx*70,x=i*53+8;return `<rect x="${x}" y="${90-h}" width="36" height="${h}" rx="5" fill="var(--ac)" opacity="${n?1:.25}" class=gy style="animation-delay:${i*60}ms"/><text class=fi style="animation-delay:${i*60+350}ms" x="${x+18}" y="${84-h}" text-anchor="middle" font-size="11" fill="var(--tx)">${n||''}</text><text x="${x+18}" y="110" text-anchor="middle" font-size="10" fill="var(--mu)">${l[i]}</text>`}).join('')}</svg>`}
+function yearCard(){const Y=new Date().getFullYear(),dy=(Y%4===0&&(Y%100!==0||Y%400===0))?366:365,ks=vkeys().filter(k=>k.startsWith(Y+'-')),td=today(),el=Math.min(dy,dDiff(Y+'-01-01',td)+1),set=new Set(ks),rest=Math.max(0,el-ks.length);
+ let best=0;for(let i=1;i<ks.length;i++)best=Math.max(best,dDiff(ks[i-1],ks[i])-1);if(ks.length)best=Math.max(best,dDiff(ks[ks.length-1],td)-1);
+ let rc='',run=null,x=0;const flush=()=>{if(run)rc+=`<rect x="${run.s}" width="${x-run.s}" height="10" fill="${run.c}"/>`};
+ for(let i=0;i<dy;i++){const d=new Date(Y,0,1+i),c=i>=el?'var(--ln)':set.has(ymd(d))?'#2f9e44':'#e03131';if(!run||run.c!==c){flush();run={s:i,c}}x=i+1}flush();
+ return `<div class=card><b>Dni treningowe / nietreningowe</b><div style="margin-top:8px">W ${Y} roku dni treningowych było <b>${ks.length}</b>, nietreningowych <b>${rest}</b> · ${(ks.length/Math.max(1,el)*100).toFixed(1).replace('.',',')}% treningowych</div><svg viewBox="0 0 ${dy} 10" preserveAspectRatio="none" style="width:100%;height:12px;margin-top:8px;border-radius:6px;display:block">${rc}</svg><div class=mu style="margin-top:8px">Najdłuższa przerwa między treningami: <b>${ks.length?dniS(best):'–'}</b></div></div>`}
 function vStats(){
  const now=new Date(),wk=new Date(now.getFullYear(),now.getMonth(),now.getDate());wk.setDate(wk.getDate()-((now.getDay()+6)%7));
  const F={w:ymd(wk),m:ymd(new Date(now.getFullYear(),now.getMonth(),1)),y:now.getFullYear()+'-01-01',a:'0'},A={};for(const k in F)A[k]=agg(F[k]);
  let h=goalCard()+`<div class=card><b>Podsumowanie</b><table class=tb><tr><th></th><th>Tydz.</th><th>Mies.</th><th>Rok</th><th>Razem</th></tr>${[['Treningi','t'],['Serie','s'],['Powtórzenia','rep'],['Tonaż (kg)','vol']].map(([l,k])=>`<tr><td>${l}</td>${['w','m','y','a'].map(p=>`<td>${nf(A[p][k])}</td>`).join('')}</tr>`).join('')}</table></div>`;
+ h+=yearCard();
  const G=A[per].g,gk=Object.keys(G).sort((a,b)=>G[b].s-G[a].s),gm=Math.max(1,...gk.map(g=>G[g].s));
  h+=`<div class=card><b>Partie mięśniowe</b><div class=row style="margin:8px 0">${[['w','Tydzień'],['m','Miesiąc'],['y','Rok'],['a','Razem']].map(([k,l])=>`<button class="chip ${per==k?'on':''}" onclick="per='${k}';render()">${l}</button>`).join('')}</div>`;
  h+=gk.length?gk.map(g=>`<div style="margin-bottom:10px"><div class=row><b style="color:${gc(g)}">${esc(g)}</b><span class=sp></span><span class=mu>${G[g].t} trening. · ${G[g].s} serii · ${nf(G[g].rep)} powt. · ${nf(G[g].vol)} kg</span></div><div class="bar sb"><div style="width:${G[g].s/gm*100}%;background:${gc(g)}"></div></div></div>`).join(''):'<div class=mu>Brak danych w tym okresie.</div>';
