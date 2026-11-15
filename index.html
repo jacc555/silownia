@@ -6,7 +6,7 @@ All rights reserved.
 Copying, reproduction, or distribution of the whole or any part
 without the author's prior consent is prohibited.
 -->
-<html lang="pl"><head><meta charset="utf-8">
+<html lang="pl"><head><meta charset="utf-8"><meta name="color-scheme" content="light dark">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Trener · Siłownia</title>
 <style>
@@ -247,6 +247,8 @@ details[open]::details-content{height:auto}
 @media (prefers-reduced-motion:reduce){.bdo{animation:none;opacity:.7}.gow::before{animation:none;opacity:0}}
 .yr{display:flex;align-items:center;gap:0;padding:2px 0;font-size:14px}.yd{width:9px;height:9px;border-radius:3px;flex:none;margin-right:9px}.gx{transform-origin:left;animation:growx .9s cubic-bezier(.2,.8,.2,1) both}
 #upd{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:16;display:flex;align-items:center;gap:8px;padding:6px 8px 6px 14px;border-radius:99px;background:var(--ac);color:#fff;font-size:13px;font-weight:600;box-shadow:0 8px 22px -8px rgba(0,0,0,.5);white-space:nowrap}#upd button{padding:5px 11px;border-radius:99px;background:rgba(255,255,255,.22);color:#fff;font-size:12.5px}
+.fit1{font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.yr span:last-child{min-width:0}
+.fit2{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 </style><link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#e8590c">
 <meta name="mobile-web-app-capable" content="yes">
@@ -434,8 +436,9 @@ function lcOk(ch){const c=document.getElementById('lc');S.ack=today();if(ch)chg=
  c.animate([{transform:'perspective(700px) rotateX(0) scale(1)',opacity:1},{transform:'perspective(700px) rotateX(-80deg) translateY(-30px) scale(.92)',opacity:0}],{duration:420,easing:'cubic-bezier(.5,0,.8,.4)',fill:'forwards'}).onfinish=()=>{
   if(ch){render();return}c.remove();sib.forEach((s,i)=>s.animate([{transform:'translateY('+h+'px)'},{transform:'translateY(-7px)',offset:.62},{transform:'translateY(2px)',offset:.82},{transform:'translateY(0)'}],{duration:620,delay:i*35,easing:'cubic-bezier(.3,.7,.3,1)',fill:'backwards'}))}}
 function lastCard(e){if(e||S.ack===today())return '';const ks=vkeys();if(!ks.length)return '';const lk=ks[ks.length-1],L=S.log[lk],n=dDiff(lk,today());if(n<1)return '';
- const w=DAYACC[pd(lk).getDay()],nx=S.cur,nm=S.plan[L.d]?S.plan[L.d].n:'',nn=S.plan[nx]?S.plan[nx].n:'';
- return `<div class=card id=lc style="border-color:var(--ac);transform-origin:50% 0;overflow:hidden"><div class=mu>Poprzednio: ${agoD(n)} (w ${w}) – Trening ${L.d+1}${nm?' · '+esc(nm):''} ✓</div>${n>=3?`<div class=mu style="margin-top:2px">Przerwa: ${dniS(n-1)} bez treningu</div>`:''}<b style="display:block;margin-top:8px;text-align:center">${S.sex==='k'?'Dziś powinnaś robić':S.sex==='m'?'Dziś powinieneś robić':'Dziś w planie'}: Trening ${nx+1}${nn?' – '+esc(nn):''}</b><div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-top:10px"><button class=lcb onclick="lcOk()">OK</button><span class=mu>lub</span><button onclick="lcOk(1)">Zmień trening</button></div></div>`}
+ const w=DAYACC[pd(lk).getDay()],dl=pd(lk),wd=WDP[dl.getDay()],op={day:'numeric',month:'long'};if(dl.getFullYear()!==new Date().getFullYear())op.year='numeric';
+ const ln=n===1?'Wczoraj ('+wd+')':n===2?'Przedwczoraj ('+wd+')':n<7?'Poprzednio: '+n+' dni temu ('+wd+')':'Poprzednio: '+n+' dni temu ('+wd+' '+dl.toLocaleDateString('pl-PL',op)+')',nx=S.cur,nm=S.plan[L.d]?S.plan[L.d].n:'',nn=S.plan[nx]?S.plan[nx].n:'';
+ return `<div class=card id=lc style="border-color:var(--ac);transform-origin:50% 0;overflow:hidden"><div class="mu fit2" data-max=13 style="text-align:center">${ln}</div><div class=mu style="margin-top:2px;text-align:center">Trening ${L.d+1}${nm?' · '+esc(nm):''} ✓</div><b class=fit1 style="display:block;margin-top:8px;text-align:center">${S.sex==='k'?'Dziś powinnaś robić':S.sex==='m'?'Dziś powinieneś robić':'Dziś w planie'}: Trening ${nx+1}${nn?' – '+esc(nn):''}</b><div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-top:10px"><button class=lcb onclick="lcOk()">OK</button><span class=mu>lub</span><button onclick="lcOk(1)">Zmień trening</button></div></div>`}
 
 const lastW=n=>{const k=Object.keys(S.log).sort().reverse();for(const d of k){const x=S.log[d].ex[n];if(x){const o=x.sets.filter(s=>s.ok&&+s.w>0);if(o.length)return o[o.length-1].w}}return''};
 const lastS=n=>{const k=Object.keys(S.log).sort().reverse();for(const d of k){const x=S.log[d].ex[n];if(x&&x.sets.some(t=>+t.w>0))return x.sets}return null};
@@ -473,7 +476,7 @@ function vToday(){if(!N())return '<div class=card><b>Brak treningów</b><div cla
  const e=S.log[today()];if(e)vd=e.d;if(vd>=N())vd=0;const P=S.plan[vd];let h='';
  h+=lastCard(e);
  let tot=0,dn=0;exs(e).forEach(x=>{if(x.g==='Cardio')return;const a=e&&e.ex[x.n]?e.ex[x.n].sets:def(x);tot+=a.length;dn+=a.filter(s=>s.ok).length});
- h+=`<div class=card><div class=mu>${new Date().toLocaleDateString('pl-PL',{weekday:'long',day:'numeric',month:'long'})}</div><div class=row style="align-items:center;gap:10px"><div class=h1 style="color:${dc(vd)}">Trening ${vd+1}</div>${!e&&N()>1?`<button class=ib title="Zmień trening" aria-label="Zmień trening" style="width:30px;height:30px;font-size:15px;opacity:.7" onclick="chg=${chg?0:1};render()">⇄</button>`:''}</div><div style="font-size:17px;font-weight:600;color:var(--mu);margin-top:2px">${esc(P.n)}</div>${planList(P)}`;
+ h+=`<div class=card><div class=mu>${new Date().toLocaleDateString('pl-PL',{weekday:'long',day:'numeric',month:'long'})}</div><div class=row style="align-items:center;gap:10px"><div class=h1 style="color:${dc(vd)}">Trening ${vd+1}</div>${!e&&N()>1?`<button class=ib title="Zmień trening" aria-label="Zmień trening" style="width:30px;height:30px;opacity:.75;display:inline-flex;align-items:center;justify-content:center" onclick="chg=${chg?0:1};render()"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block"><path d="M4 8h15M15 4l4 4-4 4M20 16H5M9 12l-4 4 4 4"/></svg></button>`:''}</div><div style="font-size:17px;font-weight:600;color:var(--mu);margin-top:2px">${esc(P.n)}</div>${planList(P)}`;
  
  if(!e&&chg)h+=`<div class=tg>${S.plan.map((p,i)=>`<button class="tt ${i==vd?'on':''}" onclick="vd=${i};chg=0;render()"><span>Trening ${i+1}</span>${i==S.cur?'<i class=dot></i>':''}<small>${esc(p.n)}</small></button>`).join('')}</div>`;
  h+=`<div class=bar><div id=pbar data-to="${tot?dn/tot*100:0}" style="width:${lastPct}%"></div></div><div class=mu>${dn}/${tot} serii</div>${tot&&dn===tot?sumCard(e,lastPct<100):''}</div>`;
@@ -561,13 +564,16 @@ function tAgg(from){const r={n:0,min:0,sm:0,hrs:Array(6).fill(0),list:[]};
  r.list.sort((a,b)=>b.dt.localeCompare(a.dt));return r}
 function hbars(v,l){const mx=Math.max(1,...v);return `<svg viewBox="0 0 320 120" width="100%">${v.map((n,i)=>{const h=n/mx*70,x=i*53+8;return `<rect x="${x}" y="${90-h}" width="36" height="${h}" rx="5" fill="var(--ac)" opacity="${n?1:.25}" class=gy style="animation-delay:${i*60}ms"/><text class=fi style="animation-delay:${i*60+350}ms" x="${x+18}" y="${84-h}" text-anchor="middle" font-size="11" fill="var(--tx)">${n||''}</text><text x="${x+18}" y="110" text-anchor="middle" font-size="10" fill="var(--mu)">${l[i]}</text>`}).join('')}</svg>`}
 const WDP=['w niedzielę','w poniedziałek','we wtorek','w środę','w czwartek','w piątek','w sobotę'];
+function fitLines(){const els=[...document.querySelectorAll('.fit1,.fit2')];els.forEach(e=>{e.style.fontSize=''});const m=els.map(e=>[e,e.scrollWidth,e.clientWidth]);m.forEach(([e,sw,cw])=>{if(cw>0&&sw>cw+.5)e.style.fontSize=Math.max(9,Math.floor((+e.dataset.max||17)*cw/sw*10-1)/10)+'px'})}
+addEventListener('resize',()=>{clearTimeout(window.__fl);window.__fl=setTimeout(fitLines,150)});
 function lastTrain(){const ks=vkeys(),lk=ks[ks.length-1];if(!lk)return '';const e=S.log[lk],pl=S.plan[e.d],nm='Trening '+(e.d+1)+(pl?' · '+esc(pl.n):''),d=pd(lk);
- return '<div style="margin-top:12px;font-size:15px;line-height:1.4;color:var(--tx)">Ostatni trening: <b>'+nm+'</b> '+WDP[d.getDay()]+' '+d.toLocaleDateString('pl-PL',{day:'numeric',month:'long',year:'numeric'})+' r.</div>'}
+ return '<div style="margin-top:14px;text-align:center;line-height:1.5;color:var(--tx)"><div style="font-size:14px">Ostatni trening:</div><div style="font-size:15px;font-weight:700">'+nm+'</div><div style="font-size:15px">'+WDP[d.getDay()]+' '+d.toLocaleDateString('pl-PL',{day:'numeric',month:'long',year:'numeric'})+' r.</div></div>'}
+const trW=n=>n===1?'treningowy':(n%10>=2&&n%10<=4&&(n%100<10||n%100>=20))?'treningowe':'treningowych';
 function yearCard(){const Y=new Date().getFullYear(),dy=(Y%4===0&&(Y%100!==0||Y%400===0))?366:365,ks=vkeys().filter(k=>k.startsWith(Y+'-')),td=today(),el=Math.min(dy,dDiff(Y+'-01-01',td)+1),set=new Set(ks),rest=Math.max(0,el-ks.length);
  let best=0;for(let i=1;i<ks.length;i++)best=Math.max(best,dDiff(ks[i-1],ks[i])-1);if(ks.length)best=Math.max(best,dDiff(ks[ks.length-1],td)-1);
  let rc='',run=null,x=0;const flush=()=>{if(run)rc+=`<rect x="${run.s}" width="${x-run.s}" height="10" fill="${run.c}"/>`};
  for(let i=0;i<dy;i++){const d=new Date(Y,0,1+i),c=i>=el?'var(--ln)':set.has(ymd(d))?'#2f9e44':'#e03131';if(!run||run.c!==c){flush();run={s:i,c}}x=i+1}flush();
- return `<div class=card><b>Dni treningowe / nietreningowe w ${Y} roku</b><div style="margin-top:10px"><div class=yr><span class=yd style="background:#2f9e44"></span><b>${ks.length}</b> treningowych</div><div class=yr><span class=yd style="background:#e03131"></span><b>${rest}</b> nietreningowych</div><div class=yr><span class=yd style="background:transparent;border:1.5px solid #2f9e44"></span><b>${(ks.length/Math.max(1,el)*100).toFixed(1).replace('.',',')}%</b> treningowych</div></div><svg class=gx viewBox="0 0 ${dy} 10" preserveAspectRatio="none" style="width:100%;height:12px;margin-top:8px;border-radius:6px;display:block">${rc}</svg><div class=mu style="margin-top:8px">Najdłuższa przerwa między treningami: <b>${ks.length?dniS(best):'–'}</b></div>${lastTrain()}</div>`}
+ return `<div class=card><b>Dni treningowe / nie treningowe w ${Y} roku</b><div style="margin-top:10px"><div class=yr><span class=yd style="background:#2f9e44"></span><span><b>${ks.length}</b> ${trW(ks.length)}</span></div><div class=yr><span class=yd style="background:#e03131"></span><span><b>${rest}</b> nie ${trW(rest)}</span></div><div class=yr><span class=yd style="background:transparent;border:1.5px solid #2f9e44"></span><span><b>${(ks.length/Math.max(1,el)*100).toFixed(1).replace('.',',')}%</b> treningowych</span></div></div><svg class=gx viewBox="0 0 ${dy} 10" preserveAspectRatio="none" style="width:100%;height:12px;margin-top:8px;border-radius:6px;display:block">${rc}</svg><div class=mu style="margin-top:8px">Najdłuższa przerwa między treningami: <b>${ks.length?dniS(best):'–'}</b></div>${lastTrain()}</div>`}
 function vStats(){
  const now=new Date(),wk=new Date(now.getFullYear(),now.getMonth(),now.getDate());wk.setDate(wk.getDate()-((now.getDay()+6)%7));
  const F={w:ymd(wk),m:ymd(new Date(now.getFullYear(),now.getMonth(),1)),y:now.getFullYear()+'-01-01',a:'0'},A={};for(const k in F)A[k]=agg(F[k]);
@@ -613,7 +619,7 @@ const W=Array(12).fill(0),Wt=Array(12).fill(0);
 
 function render(){
  $('#tabs').innerHTML=[['t','Dziś'],['c','Kalendarz'],['s','Statystyki']].map(([k,l])=>`<button class="tab ${tab==k?'on':''}" onclick="go('${k}')">${l}</button>`).join('');
- $('#v').innerHTML=(tab=='t'?bkBanner():'')+(tab=='t'?vToday():tab=='c'?vCal():vStats());fitAll();pbar()}
+ $('#v').innerHTML=(tab=='t'?bkBanner():'')+(tab=='t'?vToday():tab=='c'?vCal():vStats());fitAll();fitLines();pbar()}
 const sv2=()=>{save();render()};
 const go=k=>{tab=k;cf=0;$('#pd').open=false;$('#sd').open=false;render();glide(0);const v=$('#v');v.classList.remove('vin');void v.offsetWidth;v.classList.add('vin');const tb=document.querySelector('#tabs .tab.on');if(tb){tb.classList.add('tfx');setTimeout(()=>tb.classList.remove('tfx'),460)}};
 document.addEventListener('click',e=>{const w=e.target.closest&&e.target.closest('.set.ok .kgw,.set.ok .rpw');if(!w)return;w.classList.remove('shk');void w.offsetWidth;w.classList.add('shk');setTimeout(()=>w.classList.remove('shk'),460);try{if(navigator.vibrate)navigator.vibrate(12)}catch(x){}},true);
