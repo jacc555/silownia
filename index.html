@@ -246,7 +246,6 @@ details[open]::details-content{height:auto}
 .bdw .bd.im .m.pu:not(.sl),.bdw .bd.im.pv .m.hl{animation:mfade .5s ease backwards;fill:#ff0000;stroke:#ff0000;stroke-width:2;stroke-opacity:.7;fill-opacity:.5;opacity:1}
 @media (prefers-reduced-motion:reduce){.bdo{animation:none;opacity:.7}.gow::before{animation:none;opacity:0}}
 .yr{display:flex;align-items:center;gap:0;padding:2px 0;font-size:14px}.yd{width:9px;height:9px;border-radius:3px;flex:none;margin-right:9px}.gx{transform-origin:left;animation:growx .9s cubic-bezier(.2,.8,.2,1) both}
-#upd{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:16;display:flex;align-items:center;gap:8px;padding:6px 8px 6px 14px;border-radius:99px;background:var(--ac);color:#fff;font-size:13px;font-weight:600;box-shadow:0 8px 22px -8px rgba(0,0,0,.5);white-space:nowrap}#upd button{padding:5px 11px;border-radius:99px;background:rgba(255,255,255,.22);color:#fff;font-size:12.5px}
 .fit1{font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.yr span:last-child{min-width:0}
 .fit2{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 </style><link rel="manifest" href="manifest.webmanifest">
@@ -1154,5 +1153,5 @@ function finFx(e){const o=sumOf(e),rc=recCnt(e);let ov=document.getElementById('
 render();requestAnimationFrame(()=>setTimeout(rs,0));
 if('scrollRestoration' in history)history.scrollRestoration='manual';scrollTo(0,0);
 
-</script><script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})});navigator.serviceWorker.addEventListener("message",function(e){if(e.data&&e.data.type==="sw-updated"&&!document.getElementById("upd")){var d=document.createElement("div");d.id="upd";d.innerHTML='Dostępna nowa wersja <button onclick="location.reload()">Odśwież</button><button onclick="this.parentNode.remove()" aria-label="Zamknij">✕</button>';document.body.appendChild(d)}})}</script>
+</script><script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}</script>
 </body></html>
