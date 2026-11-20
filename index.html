@@ -274,6 +274,9 @@ details[open]::details-content{height:auto}
 @keyframes abvortex{0%{transform:rotate(0) scale(1);clip-path:inset(0px 0px 0px 0px round 18px);opacity:1}55%{transform:rotate(380deg) scale(.5);clip-path:inset(0px 0px 0px 0px round 40px);opacity:1}100%{transform:rotate(900deg) scale(.02);clip-path:inset(0px 0px 0px 0px round 50%);opacity:0}}
 @keyframes abswirl{0%{opacity:0;transform:rotate(0)}30%{opacity:.55}100%{opacity:.8;transform:rotate(-540deg)}}
 @keyframes abdust{0%{opacity:1;filter:blur(0);transform:scale(1)}100%{opacity:0;filter:blur(9px);transform:scale(1.06)}}
+.thd{display:flex;align-items:stretch;gap:8px}.thl{flex:1;min-width:0}
+.tfg{flex:none;position:relative;align-self:stretch;margin:-8px -2px 0 0;width:var(--tw,72px);pointer-events:none}
+.tfg canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
 </style><link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#e8590c">
 <meta name="mobile-web-app-capable" content="yes">
@@ -504,7 +507,7 @@ function vToday(){if(!N())return '<div class=card><b>Brak treningów</b><div cla
  const e=S.log[today()];if(e)vd=e.d;if(vd>=N())vd=0;const P=S.plan[vd];let h='';
  h+=lastCard(e);
  let tot=0,dn=0;exs(e).forEach(x=>{if(x.g==='Cardio')return;const a=e&&e.ex[x.n]?e.ex[x.n].sets:def(x);tot+=a.length;dn+=a.filter(s=>s.ok).length});
- h+=`<div class=card><div class=mu>${new Date().toLocaleDateString('pl-PL',{weekday:'long',day:'numeric',month:'long'})}</div><div class=row style="align-items:center;gap:10px"><div class=h1 style="color:${dc(vd)}">Trening ${vd+1}</div>${!e&&N()>1?`<button class=ib title="Zmień trening" aria-label="Zmień trening" style="width:30px;height:30px;opacity:.75;display:inline-flex;align-items:center;justify-content:center" onclick="chg=${chg?0:1};render()"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block"><path d="M4 8h15M15 4l4 4-4 4M20 16H5M9 12l-4 4 4 4"/></svg></button>`:''}</div><div style="font-size:17px;font-weight:600;color:var(--mu);margin-top:2px">${esc(P.n)}</div>${planList(P)}`;
+ h+=`<div class=card><div class=thd><div class=thl><div class=mu>${new Date().toLocaleDateString('pl-PL',{weekday:'long',day:'numeric',month:'long'})}</div><div class=row style="align-items:center;gap:10px"><div class=h1 style="color:${dc(vd)}">Trening ${vd+1}</div>${!e&&N()>1?`<button class=ib title="Zmień trening" aria-label="Zmień trening" style="width:30px;height:30px;opacity:.75;display:inline-flex;align-items:center;justify-content:center" onclick="chg=${chg?0:1};render()"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block"><path d="M4 8h15M15 4l4 4-4 4M20 16H5M9 12l-4 4 4 4"/></svg></button>`:''}</div><div style="font-size:17px;font-weight:600;color:var(--mu);margin-top:2px">${esc(P.n)}</div></div>${tfig(e)}</div>${planList(P)}`;
  
  if(!e&&chg)h+=`<div class=tg>${S.plan.map((p,i)=>`<button class="tt ${i==vd?'on':''}" onclick="vd=${i};chg=0;render()"><span>Trening ${i+1}</span>${i==S.cur?'<i class=dot></i>':''}<small>${esc(p.n)}</small></button>`).join('')}</div>`;
  h+=`<div class=bar><div id=pbar data-to="${tot?dn/tot*100:0}" style="width:${lastPct}%"></div></div><div class=mu>${dn}/${tot} serii</div>${tot&&dn===tot?sumCard(e,lastPct<100):''}</div>`;
@@ -647,7 +650,7 @@ const W=Array(12).fill(0),Wt=Array(12).fill(0);
 
 function render(){
  $('#tabs').innerHTML=[['t','Dziś'],['c','Kalendarz'],['s','Statystyki']].map(([k,l])=>`<button class="tab ${tab==k?'on':''}" onclick="go('${k}')">${l}</button>`).join('');
- $('#v').innerHTML=(tab=='t'?bkBanner():'')+(tab=='t'?vToday():tab=='c'?vCal():vStats());fitAll();fitLines();pbar()}
+ $('#v').innerHTML=(tab=='t'?bkBanner():'')+(tab=='t'?vToday():tab=='c'?vCal():vStats());fitAll();fitLines();pbar();walkInit()}
 const sv2=()=>{save();render()};
 (()=>{let raf=0,det=0;const R=Math.max(1,0),upd=()=>{raf=0;const tb=document.getElementById('tabs');if(!tb)return;const y=Math.max(0,window.scrollY||document.documentElement.scrollTop||0),f=Math.min(1,Math.max(0,(y-24)/150)),f2=f*f*(3-2*f);tb.style.setProperty('--f',f2.toFixed(3));
  if(f2>.35)det=1;
@@ -1222,6 +1225,131 @@ if(NATIVE){(function(){
   const fn='silownia-dane-'+today()+'.json';
   try{const r=await FS.writeFile({path:fn,data:txt,directory:'CACHE',encoding:'utf8'});await SH.share({title:fn,text:'Kopia treningów',url:r.uri,dialogTitle:'Zapisz lub wyślij kopię'});return 1}catch(e){return 0}};
 })()}
+
+/* ===== Chodząca sylwetka (przód i tył) w nagłówku ekranu Dziś ===== */
+function tfig(e){let k='';try{const s=new Set();exs(e).forEach(x=>{if(x.g!=='Cardio')regsOf(x.n,x.g).forEach(r=>s.add(r))});k=[...s].sort().join(',')}catch(_){}
+ return `<div class=tfg aria-hidden=true data-m="${k}"><canvas></canvas></div>`}
+const walkInit=(()=>{
+ const RAD=Math.PI/180,TAU=Math.PI*2,SH=9,SW=972,SHH=1095;
+ /* geometria: T=biodro, K=kolano, A=kostka, E=łokieć, S=bark; cl/cr = linie podziału tułów/ramię */
+ const G={
+  F:{w:485,h:1085,T:540,K:745,A:990,E:385,S:215,xm:245.5,px:[180,311],sx:[94,391],d:1,ox:0,
+   cl:[[150,165],[128,205],[122,238],[122,262],[126,300],[116,420],[104,470],[90,520],[80,545],[75,665]],
+   cr:[[340,165],[362,205],[368,238],[368,262],[364,300],[374,420],[386,470],[400,520],[410,545],[415,665]]},
+  B:{w:482,h:1092,T:540,K:750,A:995,E:385,S:215,xm:241,px:[176,306],sx:[92,389],d:-1,ox:490,
+   cl:[[150,165],[128,205],[122,240],[122,300],[112,360],[104,420],[98,470],[90,520],[80,545],[75,665]],
+   cr:[[332,165],[354,205],[360,240],[360,300],[370,360],[378,420],[384,470],[392,520],[402,545],[407,665]]}};
+ /* krzywe chodu (szereg Fouriera, stopnie; c = faza kroku 0..1, 0 = zetknięcie pięty) */
+ const HP=[11.38,[[19.953,-2.672],[-2.257,-2.278],[-.59,.542],[.058,-.275],[-.29,-.174],[-.13,.024]]],
+       KN=[24,[[-3.964,-21.301],[-12.487,7.14],[-1.712,3.053],[.082,-.616],[-.783,-.303],[-.067,.045]]];
+ const fs=(P,c)=>{let v=P[0];P[1].forEach((q,i)=>{const a=TAU*(i+1)*c;v+=q[0]*Math.cos(a)+q[1]*Math.sin(a)});return v};
+ const hip=c=>fs(HP,c)*.9,knee=c=>Math.max(2,fs(KN,c)),HM=HP[0]*.9;
+ /* geometria podziału */
+ const interp=(pl,y)=>{if(y<=pl[0][1])return pl[0][0];for(let i=1;i<pl.length;i++)if(y<=pl[i][1]){const a=pl[i-1],b=pl[i];return a[0]+(b[0]-a[0])*(y-a[1])/(b[1]-a[1])}return pl[pl.length-1][0]};
+ const edge=(pl,y0,y1)=>{const r=[[interp(pl,y0),y0]];pl.forEach(q=>{if(q[1]>y0&&q[1]<y1)r.push(q)});r.push([interp(pl,y1),y1]);return r};
+ const leftOf=(pl,y0,y1,xe)=>[[xe,y0]].concat(edge(pl,y0,y1),[[xe,y1]]);
+ const rightOf=(pl,y0,y1,xe)=>edge(pl,y0,y1).concat([[xe,y1],[xe,y0]]);
+ const rect=(x0,y0,x1,y1)=>[[x0,y0],[x1,y0],[x1,y1],[x0,y1]];
+ function polys(g,V){const{T,K,A,E,xm,w,h}=g,O=3,Y0=165,cl=V?g.cl.map(q=>[q[0]+V,q[1]]):g.cl,cr=V?g.cr.map(q=>[q[0]-V,q[1]]):g.cr,tcl=g.cl,tcr=g.cr;
+  const tor=[[0,0],[w,0],[w,Y0]].concat(edge(tcr,Y0,T+7),edge(tcl,Y0,T+7).reverse(),[[0,Y0]]);
+  return{
+   tor,
+   uaL:leftOf(cl,Y0,E+O,0),faL:leftOf(cl,E,670,0),
+   uaR:rightOf(cr,Y0,E+O,w),faR:rightOf(cr,E,670,w),
+   thL:rect(84,T,xm+V,K+O),thR:rect(xm-V,T,402,K+O),
+   shL:rect(40,K,xm+V,A+O),shR:rect(xm-V,K,w-40,A+O),
+   ftL:rect(40,A,xm+V,h+4),ftR:rect(xm-V,A,w-40,h+4)}}
+ /* obrazy */
+ const IM={F:null,B:null};let imgOK=0,imgWait=[];
+ function loadImgs(cb){if(imgOK)return cb();imgWait.push(cb);if(imgWait.length>1)return;
+  try{if(IMG_F.charCodeAt(0)===100)IMG_F=imgUrl(IMG_F);if(IMG_B.charCodeAt(0)===100)IMG_B=imgUrl(IMG_B)}catch(_){}
+  let n=0;const done=()=>{if(++n<2)return;imgOK=1;const w=imgWait;imgWait=[];w.forEach(f=>f())};
+  [['F',IMG_F],['B',IMG_B]].forEach(([k,u])=>{const i=new Image();i.onload=done;i.onerror=done;i.src=u;IM[k]=i})}
+ /* tekstury: pełna sylwetka z zaznaczonymi mięśniami + poświata, potem pocięta na segmenty */
+ const TC=new Map();
+ function texFor(key,sc){const id=key+'|'+sc.toFixed(2);if(TC.has(id))return TC.get(id);
+  const out={};
+  ['F','B'].forEach(sd=>{const g=G[sd],W=g.w,H=g.h,cw=Math.ceil(W*sc),ch=Math.ceil(H*sc),Q=BDP[sd==='F'?'f':'b'];
+   const mk=()=>{const c=document.createElement('canvas');c.width=cw;c.height=ch;return c};
+   const base=mk(),b=base.getContext('2d');b.imageSmoothingQuality='high';try{b.filter='grayscale(1) brightness(1.12) contrast(.95)';b.drawImage(IM[sd],0,0,cw,ch)}catch(_){}b.filter='none';
+   const ps=(key?key.split(','):[]).filter(k=>Q[k]).map(k=>new Path2D(Q[k]));
+   const glow=mk();
+   if(ps.length){
+    b.save();b.scale(cw/W,ch/H);b.lineJoin='round';b.lineWidth=2;ps.forEach(p=>{b.fillStyle='rgba(255,0,0,.75)';b.fill(p);b.strokeStyle='rgba(255,0,0,.7)';b.stroke(p)});b.restore();
+    const x=glow.getContext('2d');x.save();x.scale(cw/W,ch/H);
+    try{x.filter='blur('+(10*sc).toFixed(2)+'px)'}catch(_){}
+    x.globalAlpha=.9;x.fillStyle=x.strokeStyle='#ff0000';x.lineWidth=14;x.lineJoin='round';ps.forEach(p=>{x.fill(p);x.stroke(p)});
+    x.filter='none';x.globalAlpha=1;x.fillStyle='rgba(255,0,0,.4)';ps.forEach(p=>x.fill(p));x.restore()}
+   const PB=polys(g,2.5),PG=polys(g,0),P=PB,seg={};
+   Object.keys(P).forEach(nm=>{const pts=P[nm];let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;pts.forEach(q=>{x0=Math.min(x0,q[0]);y0=Math.min(y0,q[1]);x1=Math.max(x1,q[0]);y1=Math.max(y1,q[1])});
+    x0=Math.max(0,Math.floor(x0));y0=Math.max(0,Math.floor(y0));x1=Math.min(W,Math.ceil(x1));y1=Math.min(H,Math.ceil(y1));
+    const sw=Math.max(1,Math.ceil((x1-x0)*sc)),sh=Math.max(1,Math.ceil((y1-y0)*sc)),s={ox:x0,oy:y0,w:sw/sc,h:sh/sc};
+    [['b',base,PB[nm]],['g',glow,PG[nm]]].forEach(([k,src,pp])=>{const c=document.createElement('canvas');c.width=sw;c.height=sh;const x=c.getContext('2d');
+     x.save();x.scale(sc,sc);x.translate(-x0,-y0);const p=new Path2D();pp.forEach((q,i)=>i?p.lineTo(q[0],q[1]):p.moveTo(q[0],q[1]));p.closePath();x.clip(p);x.drawImage(src,0,0,W,H);x.restore();s[k]=c});
+    seg[nm]=s});
+   out[sd]=seg});
+  if(TC.size>5)TC.delete(TC.keys().next().value);TC.set(id,out);return out}
+ /* kinematyka jednej nogi / ramienia */
+ function leg(g,c,sd){const th=hip(c)*RAD,kn=knee(c)*RAD,ph=th-kn,p1=1+.04*g.d*Math.sin(th),p2=1+.04*g.d*Math.sin(ph);
+  const dy=-3.5*Math.cos(TAU*(c-.25)),L1=g.K-g.T,L2=g.A-g.K,L3=g.h-g.A;
+  const s1=Math.cos(th)*p1,s2=Math.cos(ph)*p2,yh=g.T+dy,yk=yh+L1*s1,ya=yk+L2*s2;
+  return{th,p1,p2,s1,s2,yh,yk,ya,sole:ya+L3,z:th}}
+ function arm(g,psi){const a=psi*RAD,b=Math.max(8,Math.min(55,20+.9*psi))*RAD,p1=1+.04*g.d*Math.sin(a),f=a+b,p2=1+.04*g.d*Math.sin(f);
+  return{s1:Math.cos(a)*p1,p1,s2:Math.cos(f)*p2,p2}}
+ /* rysowanie jednego ciała */
+ function body(ctx,sd,T,c0,still){const g=G[sd],S=T[sd],cR=c0,cL=(c0+.5)%1,d=g.d;
+  /* kolejność ekranowa: F lewy ekran = prawa noga osoby; B lewy ekran = lewa noga */
+  const cs=sd==='F'?[cR,cL]:[cL,cR],lg=cs.map(c=>still?{th:0,p1:1,p2:1,s1:1,s2:1,yh:g.T,yk:g.K,ya:g.A,sole:g.h,z:0}:leg(g,c,sd));
+  const armPsi=still?[0,0]:(sd==='F'?[.9*(hip(cL)-HM),.9*(hip(cR)-HM)]:[.9*(hip(cR)-HM),.9*(hip(cL)-HM)]);
+  const ar=armPsi.map(p=>still?{s1:1,p1:1,s2:1,p2:1}:arm(g,p));
+  const sw=still?0:Math.cos(TAU*(cR-.25)),sx=-d*12*sw,roll=-d*1.2*RAD*sw;
+  const bob=still?0:.85*(g.h-Math.max(lg[0].sole,lg[1].sole));
+  const ox=g.ox+sx;
+  const put=(s,ax,ay,tx,ty,mx,my)=>{if(!s)return;ctx.save();ctx.translate(tx,ty);ctx.scale(mx,my);
+   ctx.drawImage(s.b,s.ox-ax,s.oy-ay,s.w,s.h);if(GA>.01){ctx.globalAlpha=GA;ctx.drawImage(s.g,s.ox-ax,s.oy-ay,s.w,s.h)}ctx.restore()};
+  /* nogi: dalsza (cofnięta) najpierw */
+  const ord=[0,1].sort((a,b)=>lg[a].z*d-lg[b].z*d);
+  ord.forEach(i=>{const L=lg[i],px=g.px[i],nm=i?'R':'L',sh=S['sh'+nm],ft=S['ft'+nm],th=S['th'+nm];
+   put(ft,px,g.A,ox+px,L.ya+bob,1,1);
+   put(sh,px,g.K,ox+px,L.yk+bob,L.p2,L.s2);
+   put(th,px,g.T,ox+px,L.yh+bob,L.p1,L.s1)});
+  /* tułów i ramiona: wspólny obrót (przechył boczny) wokół miednicy */
+  ctx.save();ctx.translate(ox+(g.w/2),g.T+bob);ctx.rotate(roll);ctx.translate(-g.w/2,-g.T);
+  [0,1].forEach(i=>{const A=ar[i],px=g.sx[i],nm=i?'R':'L',ua=S['ua'+nm],fa=S['fa'+nm],ye=g.S+(g.E-g.S)*A.s1;
+   put(fa,px,g.E,px,ye,A.p2,A.s2);put(ua,px,g.S,px,g.S,A.p1,A.s1)});
+  put(S.tor,0,0,0,0,1,1);
+  ctx.restore()}
+ let GA=1;
+ /* zarządzanie płótnami */
+ let W=[],loop=0,lastSize=0;
+ const still0=()=>matchMedia('(prefers-reduced-motion:reduce)').matches;
+ function fit(en){const el=en.el,thl=el.previousElementSibling;if(!thl)return;
+  for(let k=0;k<3;k++){const h=thl.getBoundingClientRect().height+SH;el.style.setProperty('--tw',Math.max(40,Math.round(h*SW/SHH))+'px')}
+  const dpr=Math.min(3,window.devicePixelRatio||1),cw=el.clientWidth,ch=el.clientHeight;
+  if(!cw||!ch)return false;
+  const pw=Math.round(cw*dpr),ph=Math.round(ch*dpr);
+  if(en.cv.width!==pw||en.cv.height!==ph){en.cv.width=pw;en.cv.height=ph;en.tex=null}
+  return true}
+ function frame(en,ts){const cv=en.cv,ctx=cv.getContext('2d');if(!ctx||!imgOK)return;
+  const K=Math.min(cv.width/SW,cv.height/SHH),sc=Math.max(.14,Math.min(1.2,K*1.7));
+  if(!en.tex||en.sc!==sc){en.tex=texFor(en.key,sc);en.sc=sc}
+  ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height);
+  ctx.setTransform(K,0,0,K,(cv.width-SW*K)/2,(cv.height-SHH*K)/2);
+  const st=still0(),t=ts/1000,c0=(t/1.7)%1;
+  GA=.1+.9*(.5-.5*Math.cos(TAU*(t/1.7)));
+  if(st)GA=1;
+  body(ctx,'F',en.tex,c0,st);body(ctx,'B',en.tex,c0,st)}
+ let lastT=0;function tick(ts){loop=0;if(document.hidden)return;let live=0;
+  const go=ts-lastT>=30;if(go)lastT=ts;
+  W.forEach(en=>{if(!en.cv.isConnected)return;live++;if(!go)return;const r=en.el.getBoundingClientRect();if(r.bottom<-20||r.top>innerHeight+20)return;frame(en,ts)});
+  if(live)loop=requestAnimationFrame(tick)}
+ function start(){if(!loop&&!document.hidden)loop=requestAnimationFrame(tick)}
+ document.addEventListener('visibilitychange',start);
+ addEventListener('resize',()=>{W.forEach(en=>{if(en.cv.isConnected)fit(en)})});
+ return function init(){W=[...document.querySelectorAll('#v .tfg')].map(el=>({el,cv:el.firstChild,key:el.dataset.m||'',tex:null,sc:0}));
+  loadImgs(()=>{W.forEach(en=>{if(fit(en))frame(en,performance.now())});start()});
+  W.forEach(en=>fit(en))}
+})();
 render();requestAnimationFrame(()=>setTimeout(rs,0));
 if('scrollRestoration' in history)history.scrollRestoration='manual';scrollTo(0,0);
 
